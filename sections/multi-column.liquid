@@ -1,0 +1,515 @@
+<div
+  id="Section-{{ section.id }}"
+  class="mc section section--full-width"
+  style="
+    --mc-bg: {{ section.settings.background_color }};
+    --mc-heading-color: {{ section.settings.heading_color }};
+    --mc-card-text-color: {{ section.settings.card_text_color }};
+    --mc-padding-top: {{ section.settings.padding-block-start }}px;
+    --mc-padding-bottom: {{ section.settings.padding-block-end }}px;
+    overflow-x: clip;
+  "
+>
+  <div class="mc__inner">
+    <div class="mc__intro">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="mc__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="mc__subheading">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="mc__grid" id="mc-grid-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <div class="mc__card-outer" {{ block.shopify_attributes }}>
+            <div class="mc__card">
+              {%- if block.settings.icon != blank -%}
+                <div class="mc__icon">
+                  {{ block.settings.icon | image_url: width: 100 | image_tag: loading: 'lazy', class: 'mc__icon-img' }}
+                </div>
+              {%- elsif block.settings.icon_asset != blank -%}
+                <div class="mc__icon">
+                  <img
+                    src="{{ block.settings.icon_asset | asset_url }}"
+                    alt=""
+                    loading="lazy"
+                    class="mc__icon-img"
+                  >
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.photo != blank -%}
+                <figure class="mc__photo-figure">
+                  <div class="mc__photo-wrapper">
+                    {%- assign photo_sizes = '(min-width: 750px) 96px, 76px' -%}
+                    {{ block.settings.photo | image_url: width: block.settings.photo.width | image_tag: sizes: photo_sizes, widths: '76,96,152,192', loading: 'lazy', class: 'mc__photo-img' }}
+                  </div>
+                </figure>
+              {%- endif -%}
+
+              <div class="mc__text">
+                {%- if block.settings.name != blank -%}
+                  <h3 class="mc__name">{{ block.settings.name | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.credential != blank -%}
+                  <p class="mc__credential">{{ block.settings.credential | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.quote != blank -%}
+                  <div class="mc__quote">
+                    <p>{{ block.settings.quote | escape }}</p>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="mc__scrollbar" id="mc-scrollbar-{{ section.id }}">
+        <div class="mc__scrollbar-drag" id="mc-scrollbar-drag-{{ section.id }}"></div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function() {
+    var sectionId = '{{ section.id }}';
+    var grid = document.getElementById('mc-grid-' + sectionId);
+    var scrollbar = document.getElementById('mc-scrollbar-' + sectionId);
+    var drag = document.getElementById('mc-scrollbar-drag-' + sectionId);
+
+    if (!grid || !scrollbar || !drag) return;
+
+    function update() {
+      var scrollW = grid.scrollWidth;
+      var clientW = grid.clientWidth;
+
+      if (scrollW <= clientW) {
+        scrollbar.style.display = 'none';
+        return;
+      }
+
+      scrollbar.style.display = '';
+      var trackW = scrollbar.clientWidth;
+      var dragW = Math.max(30, (clientW / scrollW) * trackW);
+      var maxScroll = scrollW - clientW;
+      var scrollLeft = grid.scrollLeft;
+      var maxDragLeft = trackW - dragW;
+      var dragLeft = maxScroll > 0 ? (scrollLeft / maxScroll) * maxDragLeft : 0;
+
+      drag.style.width = dragW + 'px';
+      drag.style.transform = 'translateX(' + dragLeft + 'px)';
+    }
+
+    grid.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(update);
+    }
+  })();
+</script>
+
+{% stylesheet %}
+  /* ── Multi-column section ── */
+  .mc {
+    position: relative;
+    background-color: var(--mc-bg, #a31c69);
+    color: var(--mc-heading-color, #ffffff);
+    z-index: 0;
+  }
+
+  .mc__inner {
+    position: relative;
+    max-width: 1335px;
+    margin: 0 auto;
+    padding: calc(var(--mc-padding-top) / 2) 20px calc(var(--mc-padding-bottom) / 2) 20px;
+    color: var(--mc-heading-color, #ffffff);
+    z-index: 0;
+  }
+
+  /* ── Introduction ── */
+  .mc__intro {
+    text-align: center;
+  }
+
+  .mc__heading {
+    font-family: "poppins bold", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--mc-heading-color, #ffffff);
+    margin: 0;
+  }
+
+  .mc__subheading {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 23.2px;
+    text-align: center;
+    color: var(--mc-heading-color, #ffffff);
+    margin: 12px 0 28px 0;
+  }
+
+  /* ── Grid / Carousel ── */
+  .mc__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .mc__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mc__card-outer {
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex: 0 0 calc(100% - 40px);
+    padding-top: 40px;
+    margin-right: 16px;
+    scroll-snap-align: start;
+  }
+
+  .mc__card-outer:last-child {
+    margin-right: 0;
+  }
+
+  /* ── Card ── */
+  .mc__card {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 20px 34px 20px;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 14px;
+    color: var(--mc-card-text-color, #680040);
+  }
+
+  /* ── Decorative icon ── */
+  .mc__icon {
+    display: flex;
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+
+  .mc__icon-img {
+    max-width: 50px;
+    height: auto;
+    display: block;
+  }
+
+  /* ── Photo ── */
+  .mc__photo-figure {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin: -56px 0 0 0;
+    padding: 0;
+  }
+
+  .mc__photo-wrapper {
+    display: flex;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .mc__photo-img {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Text content ── */
+  .mc__text {
+    text-align: center;
+    color: var(--mc-card-text-color, #680040);
+  }
+
+  .mc__name {
+    font-family: "poppins bold", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--mc-card-text-color, #680040);
+    margin: 0;
+  }
+
+  .mc__credential {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20.3px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--mc-card-text-color, #680040);
+    margin: 6px 0 0 0;
+  }
+
+  .mc__quote {
+    margin: 10px 0 0 0;
+    max-width: 100%;
+  }
+
+  .mc__quote p {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 23.2px;
+    text-align: center;
+    color: var(--mc-card-text-color, #680040);
+    margin: 0;
+  }
+
+  /* ── Scrollbar (mobile) ── */
+  .mc__scrollbar {
+    display: flex;
+    margin-top: 24px;
+    width: 100%;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    position: relative;
+    z-index: 50;
+  }
+
+  .mc__scrollbar-drag {
+    position: relative;
+    height: 5px;
+    top: -1px;
+    background: #ffffff;
+    border-radius: 10px;
+    will-change: transform, width;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .mc__inner {
+      padding: var(--mc-padding-top) 40px var(--mc-padding-bottom) 40px;
+    }
+
+    .mc__heading {
+      font-size: 36px;
+      line-height: 39.6px;
+    }
+
+    .mc__subheading {
+      margin-bottom: 32px;
+    }
+
+    .mc__grid {
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 28px 32px;
+      overflow-x: visible;
+      scroll-snap-type: none;
+    }
+
+    .mc__card-outer {
+      flex: 0 0 calc(33.333% - 22px);
+      max-width: calc(33.333% - 22px);
+      margin-right: 0;
+      padding-top: 50px;
+      scroll-snap-align: unset;
+    }
+
+    .mc__photo-figure {
+      margin-top: -66px;
+    }
+
+    .mc__photo-wrapper {
+      width: 100px;
+      height: 100px;
+    }
+
+    .mc__name {
+      font-size: 20px;
+      line-height: 22px;
+    }
+
+    .mc__scrollbar {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Multi-column",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Approved By The Experts"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Recommending what's best for you and your family"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#a31c69"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#680040"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "expert-card",
+      "name": "Expert card",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Decorative icon",
+          "info": "PNG/JPG icon image. Leave empty to use SVG fallback below."
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset fallback",
+          "info": "SVG filename in assets/ for fallback when no image uploaded"
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Expert Name"
+        },
+        {
+          "type": "text",
+          "id": "credential",
+          "label": "Credential",
+          "default": "Title and Organization"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "\"Expert testimonial quote goes here.\""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-column",
+      "settings": {
+        "heading": "Approved By The Experts",
+        "subheading": "Recommending what's best for you and your family",
+        "background_color": "#a31c69",
+        "heading_color": "#ffffff",
+        "card_text_color": "#680040",
+        "padding-block-start": 80,
+        "padding-block-end": 12
+      },
+      "blocks": [
+        {
+          "type": "expert-card",
+          "settings": {
+            "name": "Dr. Joel Gator Warsh",
+            "credential": "Pediatrician, Integrative Pediatrics and Medicine",
+            "quote": "\"I'm impressed by Llama Naturals' commitment to pure, organic ingredients and their avoidance of common allergens, making it a safe choice for all my little patients.\""
+          }
+        },
+        {
+          "type": "expert-card",
+          "settings": {
+            "icon_asset": "vector-ee4258b9-2b1d-4695-b878-cd1b8a1d5679-51065c5bdc39.svg",
+            "name": "Dr. Lisa Bienstock",
+            "credential": "Pediatric Dentist, The Kids Dental Office of Phoenix",
+            "quote": "\"I recommend Llama Naturals to my patients, because they are made with real ingredients and are a lot less likely to get stuck in our teeth and cause cavities.\""
+          }
+        },
+        {
+          "type": "expert-card",
+          "settings": {
+            "icon_asset": "vector-779d5901-fc3a-4764-88b9-fe3ab33e94d4-499b5ac6521e.svg",
+            "name": "Karalynne Call",
+            "credential": "Certified Nutritionist, Mental Health Advocate",
+            "quote": "\"I love Llama Naturals because they are only made of real fruits and vegetables! I love that they do not use synthetic vitamins that are difficult for our bodies to absorb.\""
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

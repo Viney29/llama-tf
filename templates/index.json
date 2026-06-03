@@ -578,6 +578,55 @@
         "row_5",
         "row_6"
       ]
+    },
+    "multi_column": {
+      "type": "multi-column",
+      "settings": {
+        "heading": "Approved By The Experts",
+        "subheading": "Recommending what's best for you and your family",
+        "background_color": "#a31c69",
+        "heading_color": "#ffffff",
+        "card_text_color": "#680040",
+        "padding-block-start": 80,
+        "padding-block-end": 12
+      },
+      "blocks": {
+        "expert_1": {
+          "type": "expert-card",
+          "settings": {
+            "icon": "shopify://shop_images/vector-5d28e86a-697d-4379-8d65-91cb249af82a-04d806cf5e3f.png",
+            "photo": "shopify://shop_images/expert-image-1f3f4d047d5a.png",
+            "name": "Dr. Joel Gator Warsh",
+            "credential": "Pediatrician, Integrative Pediatrics and Medicine",
+            "quote": "\"I'm impressed by Llama Naturals' commitment to pure, organic ingredients and their avoidance of common allergens, making it a safe choice for all my little patients.\""
+          }
+        },
+        "expert_2": {
+          "type": "expert-card",
+          "settings": {
+            "icon_asset": "vector-ee4258b9-2b1d-4695-b878-cd1b8a1d5679-51065c5bdc39.svg",
+            "photo": "shopify://shop_images/expert-image-803cf730-fc67-4b4c-9d51-356149faee12-45dba73d8109.png",
+            "name": "Dr. Lisa Bienstock",
+            "credential": "Pediatric Dentist, The Kids Dental Office of Phoenix",
+            "quote": "\"I recommend Llama Naturals to my patients, because they are made with real ingredients and are a lot less likely to get stuck in our teeth and cause cavities.\""
+          }
+        },
+        "expert_3": {
+          "type": "expert-card",
+          "settings": {
+            "icon_asset": "vector-779d5901-fc3a-4764-88b9-fe3ab33e94d4-499b5ac6521e.svg",
+            "photo": "shopify://shop_images/expert-image-2dd5f2dc-851c-402e-8d62-61e0f90bb17d-255c8dd178e3.png",
+            "name": "Karalynne Call",
+            "credential": "Certified Nutritionist, Mental Health Advocate",
+            "quote": "\"I love Llama Naturals because they are only made of real fruits and vegetables! I love that they do not use synthetic vitamins that are difficult for our bodies to absorb.\""
+          }
+        }
+      },
+      "block_order": [
+        "expert_1",
+        "expert_2",
+        "expert_3"
+      ]
     }
   },
   "order": [
@@ -588,6 +637,7 @@
     "tabbed_carousel",
     "social_proof_stats",
     "product_list_fa6P9H",
-    "difference_table"
+    "difference_table",
+    "multi_column"
   ]
 }
