@@ -1,0 +1,243 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="ticker section section--full-width color-{{ section.settings.color_scheme }}"
+  style="
+    --ticker-duration: {{ section.settings.speed }}s;
+    --ticker-gap: {{ section.settings.gap }}px;
+    --ticker-padding-block-start: {{ section.settings.padding-block-start }}px;
+    --ticker-padding-block-end: {{ section.settings.padding-block-end }}px;
+  "
+>
+  <div class="ticker__inner">
+    <div class="ticker__track">
+      {%- for copy in (1..2) -%}
+        <div class="ticker__set"{% if copy == 2 %} aria-hidden="true"{% endif %}>
+          {%- for iteration in (1..2) -%}
+            {%- for block in section.blocks -%}
+              <div class="ticker__item" {{ block.shopify_attributes }}>
+                {%- if block.settings.icon != blank -%}
+                  <img
+                    class="ticker__icon"
+                    src="{{ block.settings.icon | image_url: width: 64 }}"
+                    alt="{{ block.settings.text | escape }}"
+                    width="32"
+                    height="auto"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+                <p class="ticker__text">{{ block.settings.text | escape }}</p>
+              </div>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ticker {
+    overflow: hidden;
+  }
+
+  .ticker__inner {
+    overflow: hidden;
+    padding-block-start: var(--ticker-padding-block-start, 18px);
+    padding-block-end: var(--ticker-padding-block-end, 18px);
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .ticker__set {
+    display: flex;
+    align-items: center;
+    gap: var(--ticker-gap, 23px);
+    padding-inline-end: var(--ticker-gap, 23px);
+    flex-shrink: 0;
+  }
+
+  .ticker__item {
+    display: flex;
+    align-items: center;
+    gap: var(--ticker-gap, 23px);
+    flex-shrink: 0;
+  }
+
+  .ticker__icon {
+    width: 32px;
+    height: auto;
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .ticker__text {
+    font-size: 14px;
+    line-height: 20px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-foreground);
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ticker__track {
+      animation: ticker-marquee var(--ticker-duration, 32s) linear infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+    }
+  }
+
+  @keyframes ticker-marquee {
+    0% {
+      transform: translateZ(0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ticker__inner {
+      padding-block-start: 15px;
+      padding-block-end: 15px;
+    }
+
+    .ticker__set {
+      gap: 16px;
+      padding-inline-end: 16px;
+    }
+
+    .ticker__item {
+      gap: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Ticker",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Ticker"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Speed",
+      "info": "Duration in seconds for one full cycle. Lower is faster.",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 32,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-8"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ticker-item",
+      "name": "Ticker item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Your message here"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ticker",
+      "settings": {
+        "speed": 32,
+        "gap": 24,
+        "color_scheme": "scheme-8",
+        "padding-block-start": 18,
+        "padding-block-end": 18
+      },
+      "blocks": [
+        {
+          "type": "ticker-item",
+          "settings": {
+            "text": "BUY 2 GET 1 FREE FOR LIFE"
+          }
+        },
+        {
+          "type": "ticker-item",
+          "settings": {
+            "text": "2M+ BOTTLES SOLD"
+          }
+        },
+        {
+          "type": "ticker-item",
+          "settings": {
+            "text": "BESTSELLING WHOLE FOOD KIDS VITAMIN ON AMAZON"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

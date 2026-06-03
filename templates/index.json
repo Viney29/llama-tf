@@ -61,6 +61,43 @@
         "trust_4"
       ]
     },
+    "ticker": {
+      "type": "ticker",
+      "settings": {
+        "speed": 32,
+        "gap": 24,
+        "color_scheme": "scheme-8",
+        "padding-block-start": 18,
+        "padding-block-end": 18
+      },
+      "blocks": {
+        "item_1": {
+          "type": "ticker-item",
+          "settings": {
+            "icon": "shopify://shop_images/icon-1-a8136a8ccf28.png",
+            "text": "BUY 2 GET 1 FREE FOR LIFE"
+          }
+        },
+        "item_2": {
+          "type": "ticker-item",
+          "settings": {
+            "text": "2M+ BOTTLES SOLD"
+          }
+        },
+        "item_3": {
+          "type": "ticker-item",
+          "settings": {
+            "icon": "shopify://shop_images/icon-3-766a568e20f9.png",
+            "text": "BESTSELLING WHOLE FOOD KIDS VITAMIN ON AMAZON"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ]
+    },
     "curated_reviews": {
       "type": "curated-reviews",
       "settings": {
@@ -298,6 +335,7 @@
   },
   "order": [
     "hero_banner",
+    "ticker",
     "curated_reviews",
     "product_list_fa6P9H"
   ]
