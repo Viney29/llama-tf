@@ -1,0 +1,499 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign check_icon = section.settings.check_icon
+  assign image_desktop = section.settings.image_desktop
+  assign image_mobile = section.settings.image_mobile
+  assign feature_items = section.blocks | where: 'type', 'feature_item'
+  assign allergen_icons = section.blocks | where: 'type', 'allergen_icon'
+-%}
+
+<section
+  id="Section-{{ section.id }}"
+  class="our-story section section--full-width"
+  style="
+    --our-story-padding-top: {{ section.settings.padding-block-start }}px;
+    --our-story-padding-bottom: {{ section.settings.padding-block-end }}px;
+    --our-story-media-bg: {{ section.settings.media_background_color }};
+    --our-story-media-bg-mobile: {{ section.settings.media_background_color_mobile }};
+    --our-story-content-bg: {{ section.settings.content_background_color }};
+    --our-story-heading-color: {{ section.settings.heading_color }};
+    --our-story-text-color: {{ section.settings.text_color }};
+  "
+>
+  <div class="our-story__inner">
+    <div class="our-story__media">
+      {%- if image_desktop != blank or image_mobile != blank -%}
+        <picture>
+          {%- if image_desktop != blank -%}
+            {%- assign desktop_h = image_desktop.height -%}
+            {%- assign desktop_h_2x = desktop_h | times: 2 -%}
+            {%- assign desktop_h_3x = desktop_h | times: 3 -%}
+            <source
+              media="(min-width: 750px)"
+              srcset="{{ image_desktop | image_url: height: desktop_h }} 1x, {{ image_desktop | image_url: height: desktop_h_2x }} 2x, {{ image_desktop | image_url: height: desktop_h_3x }} 3x"
+            >
+          {%- endif -%}
+          {%- assign fallback_image = image_mobile | default: image_desktop -%}
+          {%- if fallback_image != blank -%}
+            {% render 'image', image: fallback_image, class: 'our-story__image image__img' %}
+          {%- endif -%}
+        </picture>
+      {%- endif -%}
+    </div>
+
+    <div class="our-story__content">
+      <div class="our-story__heading-group">
+        {%- if eyebrow != blank -%}
+          <p class="our-story__eyebrow">{{ eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if heading != blank -%}
+          <h2 class="our-story__heading">{{ heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- if feature_items.size > 0 -%}
+        <ul class="our-story__feature-list" role="list">
+          {%- for block in feature_items -%}
+            <li class="our-story__feature-item" {{ block.shopify_attributes }}>
+              {%- if check_icon != blank -%}
+                <div class="our-story__feature-icon">
+                  {% render 'image', image: check_icon, class: 'image__img' %}
+                </div>
+              {%- endif -%}
+              <div class="our-story__feature-copy">
+                {%- if block.settings.title != blank -%}
+                  <p class="our-story__feature-title">{{ block.settings.title | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.description != blank -%}
+                  <p class="our-story__feature-description">{{ block.settings.description | escape }}</p>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if allergen_icons.size > 0 -%}
+        <div class="our-story__allergen-icons" role="list">
+          {%- for block in allergen_icons -%}
+            <div class="our-story__allergen-icon" role="listitem" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != blank -%}
+                {% render 'image', image: block.settings.icon, class: 'image__img', alt_text_fallback: block.settings.label %}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* ── Our Story section ── */
+  .our-story {
+    position: relative;
+    padding-block: calc(var(--our-story-padding-top) / 2) calc(var(--our-story-padding-bottom) / 2);
+    z-index: 0;
+  }
+
+  .our-story__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Media column ── */
+  .our-story__media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--our-story-media-bg-mobile);
+  }
+
+  .our-story__media picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .our-story__media .image__img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Content column ── */
+  .our-story__content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 40px 16px;
+    background-color: var(--our-story-content-bg);
+  }
+
+  /* ── Heading group ── */
+  .our-story__heading-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .our-story__eyebrow {
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    line-height: 1.45;
+    text-transform: uppercase;
+    color: var(--our-story-text-color);
+    margin: 0;
+  }
+
+  .our-story__heading {
+    font-family: var(--font-heading--family);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--our-story-heading-color);
+    max-width: 560px;
+    margin: 0;
+  }
+
+  /* ── Feature list ── */
+  .our-story__feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .our-story__feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .our-story__feature-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .our-story__feature-icon .image__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .our-story__feature-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .our-story__feature-title {
+    font-family: var(--font-heading--family);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.43;
+    color: var(--our-story-heading-color);
+    margin: 0;
+  }
+
+  .our-story__feature-description {
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--our-story-text-color);
+    margin: 0;
+  }
+
+  /* ── Allergen icons ── */
+  .our-story__allergen-icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .our-story__allergen-icon {
+    flex: 1 1 48px;
+    max-width: 48px;
+  }
+
+  .our-story__allergen-icon .image__img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .our-story {
+      padding-block: var(--our-story-padding-top) var(--our-story-padding-bottom);
+    }
+
+    .our-story__inner {
+      grid-template-columns: 1fr 1fr;
+      min-height: 640px;
+    }
+
+    .our-story__media {
+      background-color: var(--our-story-media-bg);
+    }
+
+    .our-story__content {
+      padding: 64px;
+    }
+
+    .our-story__heading {
+      font-size: 40px;
+      line-height: 1.2;
+      max-width: 580px;
+    }
+
+    .our-story__feature-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      margin-top: 0;
+    }
+
+    .our-story__feature-copy {
+      gap: 4px;
+    }
+
+    .our-story__feature-title {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .our-story__allergen-icons {
+      gap: 24px;
+      padding-inline-start: 12px;
+    }
+
+    .our-story__allergen-icon {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      max-width: none;
+      flex: 0 0 56px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Our Story",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)"
+    },
+    {
+      "type": "image_picker",
+      "id": "check_icon",
+      "label": "Check icon"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "PARENT-FOUNDED, SCIENCE BACKED."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Making real fruit vitamins is hard work. We did it anyway."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "media_background_color",
+      "label": "Media background (desktop)",
+      "default": "#FEC9A6"
+    },
+    {
+      "type": "color",
+      "id": "media_background_color_mobile",
+      "label": "Media background (mobile)",
+      "default": "#F5B390"
+    },
+    {
+      "type": "color",
+      "id": "content_background_color",
+      "label": "Content background",
+      "default": "#FCDAC4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_item",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "allergen_icon",
+      "name": "Allergen Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Our Story",
+      "blocks": [
+        {
+          "type": "feature_item",
+          "settings": {
+            "title": "75+ Iterations to Get It Right",
+            "description": "It took more than 75 trials using real organic fruit to create a gummy kids actually love."
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "title": "Clean Ingredients. Clear Conscience.",
+            "description": "No added cane sugar, no artificial junk. Third-party tested and made in GMP-certified facilities."
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "title": "Built by Dads Who Get It",
+            "description": "The vitamin we wanted for our own kids. So we built it."
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Soy"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Eggs"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Dairy"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Peanuts"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Tree Nuts"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Shellfish"
+          }
+        },
+        {
+          "type": "allergen_icon",
+          "settings": {
+            "label": "Wheat"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

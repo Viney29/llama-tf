@@ -160,6 +160,107 @@
         "review_3"
       ]
     },
+    "our_story": {
+      "type": "our-story",
+      "settings": {
+        "image_desktop": "shopify://shop_images/our-story-d-a9fc30c76b9e.png",
+        "image_mobile": "shopify://shop_images/our-story-m-19282734288d.png",
+        "check_icon": "shopify://shop_images/checkcircle-aa2505884443.png",
+        "eyebrow": "PARENT-FOUNDED, SCIENCE BACKED.",
+        "heading": "Making real fruit vitamins is hard work. We did it anyway.",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "media_background_color": "#FEC9A6",
+        "media_background_color_mobile": "#F5B390",
+        "content_background_color": "#FCDAC4",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "feature_1": {
+          "type": "feature_item",
+          "settings": {
+            "title": "75+ Iterations to Get It Right",
+            "description": "It took more than 75 trials using real organic fruit to create a gummy kids actually love."
+          }
+        },
+        "feature_2": {
+          "type": "feature_item",
+          "settings": {
+            "title": "Clean Ingredients. Clear Conscience.",
+            "description": "No added cane sugar, no artificial junk. Third-party tested and made in GMP-certified facilities."
+          }
+        },
+        "feature_3": {
+          "type": "feature_item",
+          "settings": {
+            "title": "Built by Dads Who Get It",
+            "description": "The vitamin we wanted for our own kids. So we built it."
+          }
+        },
+        "allergen_1": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-soy-feecebbec020.png",
+            "label": "Soy"
+          }
+        },
+        "allergen_2": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-eggs-65e24e68d57c.png",
+            "label": "Eggs"
+          }
+        },
+        "allergen_3": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-dairy-e429d885dad7.png",
+            "label": "Dairy"
+          }
+        },
+        "allergen_4": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-peanuts-57912626e5c8.png",
+            "label": "Peanuts"
+          }
+        },
+        "allergen_5": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-tree-nuts-fb565ec7296a.png",
+            "label": "Tree Nuts"
+          }
+        },
+        "allergen_6": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-shellfish-5315f3a1e829.png",
+            "label": "Shellfish"
+          }
+        },
+        "allergen_7": {
+          "type": "allergen_icon",
+          "settings": {
+            "icon": "shopify://shop_images/no-wheat-0890db486fad.png",
+            "label": "Wheat"
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "allergen_1",
+        "allergen_2",
+        "allergen_3",
+        "allergen_4",
+        "allergen_5",
+        "allergen_6",
+        "allergen_7"
+      ]
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -359,6 +460,7 @@
     "hero_banner",
     "curated_reviews",
     "ticker",
+    "our_story",
     "tabbed_carousel",
     "product_list_fa6P9H"
   ]
