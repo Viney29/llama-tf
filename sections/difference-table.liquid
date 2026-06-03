@@ -1,0 +1,602 @@
+<section
+  id="Section-{{ section.id }}"
+  class="difference-table section section--full-width"
+  style="
+    --dt-padding-top: {{ section.settings.padding-block-start }}px;
+    --dt-padding-bottom: {{ section.settings.padding-block-end }}px;
+    --dt-bg: {{ section.settings.background_color }};
+    --dt-heading-color: {{ section.settings.heading_color }};
+    --dt-text-color: {{ section.settings.text_color }};
+    --dt-highlight-bg: {{ section.settings.highlight_bg }};
+    --dt-border-color: {{ section.settings.text_color | color_modify: 'alpha', 0.4 }};
+    --dt-button-bg: {{ section.settings.button_bg }};
+    --dt-button-text: {{ section.settings.button_text_color }};
+    --dt-check-color: {{ section.settings.check_color }};
+    --dt-cross-color: {{ section.settings.cross_color }};
+  "
+>
+  <div class="difference-table__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="difference-table__heading">
+        <span class="difference-table__heading-desktop">{{ section.settings.heading | escape }}</span>
+        <span class="difference-table__heading-mobile">{{ section.settings.heading | escape }}</span>
+      </h2>
+    {%- endif -%}
+
+    <div class="difference-table__table">
+      {%- comment -%} Header row {%- endcomment -%}
+      <div class="difference-table__row difference-table__row--header">
+        <div class="difference-table__cell difference-table__cell--label"></div>
+        <div class="difference-table__cell difference-table__cell--brand difference-table__cell--header-brand">
+          {%- if section.settings.brand_logo != blank -%}
+            {% render 'image', image: section.settings.brand_logo, height: 32, class: 'difference-table__brand-logo' %}
+          {%- endif -%}
+        </div>
+        <div class="difference-table__cell difference-table__cell--header-competitor">
+          {%- if section.settings.competitor_heading != blank -%}
+            {{ section.settings.competitor_heading | escape }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Data rows from blocks {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        <div class="difference-table__row{% if forloop.last %} difference-table__row--last{% endif %}" {{ block.shopify_attributes }}>
+          <div class="difference-table__cell difference-table__cell--label">
+            {{ block.settings.label | escape }}
+          </div>
+          <div class="difference-table__cell difference-table__cell--brand">
+            {%- if block.settings.brand_value_type == 'check' -%}
+              <span class="difference-table__icon difference-table__icon--check"></span>
+            {%- elsif block.settings.brand_value_type == 'cross' -%}
+              <span class="difference-table__icon difference-table__icon--cross"></span>
+            {%- else -%}
+              <span class="difference-table__value">{{ block.settings.brand_text | escape }}</span>
+            {%- endif -%}
+          </div>
+          <div class="difference-table__cell difference-table__cell--competitor">
+            {%- if block.settings.competitor_value_type == 'check' -%}
+              <span class="difference-table__icon difference-table__icon--check"></span>
+            {%- elsif block.settings.competitor_value_type == 'cross' -%}
+              <span class="difference-table__icon difference-table__icon--cross"></span>
+            {%- else -%}
+              <span class="difference-table__value">{{ block.settings.competitor_text | escape }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.button_text != blank -%}
+      <a
+        {%- if section.settings.button_link != blank %}
+          href="{{ section.settings.button_link }}"
+        {%- endif %}
+        class="difference-table__button"
+      >
+        {{ section.settings.button_text | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* ── Difference Table section ── */
+  .difference-table {
+    position: relative;
+    padding-block: calc(var(--dt-padding-top) / 2) calc(var(--dt-padding-bottom) / 2);
+    background-color: var(--dt-bg);
+    color: var(--dt-text-color);
+    z-index: 0;
+  }
+
+  .difference-table__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding-inline: 16px;
+    color: var(--dt-text-color);
+  }
+
+  /* ── Heading ── */
+  .difference-table__heading {
+    font-family: "poppins bold", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    text-align: center;
+    color: var(--dt-heading-color);
+    margin: 0;
+    max-width: 280px;
+  }
+
+  .difference-table__heading-desktop {
+    display: none;
+  }
+
+  .difference-table__heading-mobile {
+    display: inline;
+  }
+
+  /* ── Table ── */
+  .difference-table__table {
+    width: 100%;
+    max-width: 672px;
+    border: 1px solid var(--dt-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* ── Rows ── */
+  .difference-table__row {
+    display: grid;
+    grid-template-columns: 1fr 1.17fr 1.17fr;
+    color: var(--dt-text-color);
+  }
+
+  .difference-table__row--header {
+    min-height: 92px;
+  }
+
+  /* ── Cells ── */
+  .difference-table__cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    min-height: 60px;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    text-align: center;
+  }
+
+  .difference-table__cell--label {
+    justify-content: flex-start;
+    text-align: start;
+    border-inline-end: 1px solid var(--dt-border-color);
+  }
+
+  .difference-table__cell--brand {
+    background-color: var(--dt-highlight-bg);
+  }
+
+  .difference-table__cell--brand:not(:last-child) {
+    border-inline-end: 1px solid var(--dt-border-color);
+  }
+
+  /* Bottom borders on all cells except last row */
+  .difference-table__row:not(.difference-table__row--last) .difference-table__cell {
+    border-block-end: 1px solid var(--dt-border-color);
+  }
+
+  /* ── Header cells ── */
+  .difference-table__cell--header-brand {
+    min-height: 92px;
+  }
+
+  .difference-table__cell--header-competitor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    min-height: 92px;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ── Brand logo ── */
+  .difference-table__brand-logo {
+    max-width: 92px;
+    max-height: 34px;
+    width: auto;
+    height: auto;
+  }
+
+  /* ── Cell value text ── */
+  .difference-table__value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    text-align: center;
+    color: var(--dt-text-color);
+  }
+
+  /* ── Check & Cross icons ── */
+  .difference-table__icon {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+  }
+
+  .difference-table__icon--check {
+    background-color: var(--dt-check-color);
+  }
+
+  .difference-table__icon--check::before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(-45deg);
+    margin-block-start: -2px;
+  }
+
+  .difference-table__icon--cross {
+    background-color: var(--dt-cross-color);
+  }
+
+  .difference-table__icon--cross::before,
+  .difference-table__icon--cross::after {
+    content: "";
+    position: absolute;
+    width: 11px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+  }
+
+  .difference-table__icon--cross::before {
+    transform: rotate(45deg);
+  }
+
+  .difference-table__icon--cross::after {
+    transform: rotate(-45deg);
+  }
+
+  /* ── CTA Button ── */
+  .difference-table__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 24px;
+    width: 100%;
+    max-width: 358px;
+    min-height: 48px;
+    background-color: var(--dt-button-bg);
+    color: var(--dt-button-text);
+    border-radius: 24px;
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .difference-table__button:hover {
+    opacity: 0.85;
+  }
+
+  .difference-table__button:focus-visible {
+    outline: 2px solid var(--dt-button-bg);
+    outline-offset: 2px;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .difference-table {
+      padding-block: var(--dt-padding-top) var(--dt-padding-bottom);
+    }
+
+    .difference-table__inner {
+      gap: 32px;
+      padding-inline: 12px;
+    }
+
+    .difference-table__heading {
+      font-size: 40px;
+      line-height: 48px;
+      max-width: none;
+    }
+
+    .difference-table__heading-desktop {
+      display: inline;
+    }
+
+    .difference-table__heading-mobile {
+      display: none;
+    }
+
+    .difference-table__row {
+      grid-template-columns: 192px 240px 240px;
+    }
+
+    .difference-table__cell {
+      min-height: 60px;
+    }
+
+    .difference-table__cell--header-brand,
+    .difference-table__cell--header-competitor,
+    .difference-table__row--header .difference-table__cell--label {
+      min-height: 92px;
+    }
+
+    .difference-table__brand-logo {
+      max-width: 87px;
+      max-height: 32px;
+    }
+
+    .difference-table__icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .difference-table__icon--check::before {
+      width: 11px;
+      height: 6px;
+    }
+
+    .difference-table__icon--cross::before,
+    .difference-table__icon--cross::after {
+      width: 12px;
+      height: 2.4px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Difference table",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Most gummies start with sugar. Ours start with fruit."
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "text",
+      "id": "competitor_heading",
+      "label": "Competitor heading",
+      "default": "Regular Gummies"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFEF5"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "highlight_bg",
+      "label": "Brand column color",
+      "default": "#FFC56E"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "check_color",
+      "label": "Check icon color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "cross_color",
+      "label": "Cross icon color",
+      "default": "#D9384A"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 64,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Feature"
+        },
+        {
+          "type": "header",
+          "content": "Brand column"
+        },
+        {
+          "type": "select",
+          "id": "brand_value_type",
+          "label": "Brand value type",
+          "options": [
+            { "value": "text", "label": "Text" },
+            { "value": "check", "label": "Check" },
+            { "value": "cross", "label": "Cross" }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "brand_text",
+          "label": "Brand text"
+        },
+        {
+          "type": "header",
+          "content": "Competitor column"
+        },
+        {
+          "type": "select",
+          "id": "competitor_value_type",
+          "label": "Competitor value type",
+          "options": [
+            { "value": "text", "label": "Text" },
+            { "value": "check", "label": "Check" },
+            { "value": "cross", "label": "Cross" }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "competitor_text",
+          "label": "Competitor text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Difference table",
+      "settings": {
+        "heading": "Most gummies start with sugar. Ours start with fruit.",
+        "competitor_heading": "Regular Gummies",
+        "button_text": "SHOP NOW",
+        "background_color": "#FFFEF5",
+        "heading_color": "#680040",
+        "text_color": "#680040",
+        "highlight_bg": "#FFC56E",
+        "button_bg": "#680040",
+        "button_text_color": "#FFFFFF",
+        "check_color": "#680040",
+        "cross_color": "#D9384A",
+        "padding-block-start": 64,
+        "padding-block-end": 64
+      },
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "label": "Made With",
+            "brand_value_type": "text",
+            "brand_text": "Fruits & Veggies",
+            "competitor_value_type": "text",
+            "competitor_text": "Sugar & Sweeteners"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Vitamins",
+            "brand_value_type": "text",
+            "brand_text": "Whole Food",
+            "competitor_value_type": "text",
+            "competitor_text": "Synthetic"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Certified Organic",
+            "brand_value_type": "check",
+            "competitor_value_type": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Vegan & Allergen Free",
+            "brand_value_type": "check",
+            "competitor_value_type": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Tastes Like",
+            "brand_value_type": "text",
+            "brand_text": "Real Fruit",
+            "competitor_value_type": "text",
+            "competitor_text": "Candy"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Money Back Guarantee",
+            "brand_value_type": "text",
+            "brand_text": "100 Days",
+            "competitor_value_type": "cross"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

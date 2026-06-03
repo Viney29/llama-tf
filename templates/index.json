@@ -493,6 +493,91 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "difference_table": {
+      "type": "difference-table",
+      "settings": {
+        "heading": "Most gummies start with sugar. Ours start with fruit.",
+        "brand_logo": "shopify://shop_images/logo-bhed-0a327ed62c77.png",
+        "competitor_heading": "Regular Gummies",
+        "button_text": "SHOP NOW",
+        "button_link": "/collections/all",
+        "background_color": "#FFFEF5",
+        "heading_color": "#680040",
+        "text_color": "#680040",
+        "highlight_bg": "#FFC56E",
+        "button_bg": "#680040",
+        "button_text_color": "#FFFFFF",
+        "check_color": "#680040",
+        "cross_color": "#D9384A",
+        "padding-block-start": 64,
+        "padding-block-end": 64
+      },
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "label": "Made With",
+            "brand_value_type": "text",
+            "brand_text": "Fruits & Veggies",
+            "competitor_value_type": "text",
+            "competitor_text": "Sugar & Sweeteners"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "label": "Vitamins",
+            "brand_value_type": "text",
+            "brand_text": "Whole Food",
+            "competitor_value_type": "text",
+            "competitor_text": "Synthetic"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "label": "Certified Organic",
+            "brand_value_type": "check",
+            "competitor_value_type": "cross"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "label": "Vegan & Allergen Free",
+            "brand_value_type": "check",
+            "competitor_value_type": "cross"
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "label": "Tastes Like",
+            "brand_value_type": "text",
+            "brand_text": "Real Fruit",
+            "competitor_value_type": "text",
+            "competitor_text": "Candy"
+          }
+        },
+        "row_6": {
+          "type": "row",
+          "settings": {
+            "label": "Money Back Guarantee",
+            "brand_value_type": "text",
+            "brand_text": "100 Days",
+            "competitor_value_type": "cross"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4",
+        "row_5",
+        "row_6"
+      ]
     }
   },
   "order": [
@@ -502,6 +587,7 @@
     "our_story",
     "tabbed_carousel",
     "social_proof_stats",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "difference_table"
   ]
 }
