@@ -357,9 +357,9 @@
   },
   "order": [
     "hero_banner",
+    "curated_reviews",
     "ticker",
     "tabbed_carousel",
-    "curated_reviews",
     "product_list_fa6P9H"
   ]
 }
