@@ -1,0 +1,271 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+  "
+>
+  <div
+    class="curated-reviews"
+    role="region"
+    aria-label="Customer reviews"
+  >
+    <div class="curated-reviews__wrapper">
+      {%- for block in section.blocks -%}
+        <div class="curated-reviews__card" {{ block.shopify_attributes }}>
+          <blockquote class="curated-reviews__quote">
+            {{ block.settings.quote | escape }}
+          </blockquote>
+          <div class="curated-reviews__author">
+            <span class="curated-reviews__verified-badge" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#verified-{{ block.id }})">
+                  <path d="M11.25 6L10.0575 4.6425L10.23 2.8575L8.4825 2.475L7.575 0.9375L5.925 1.6575L4.275 0.9375L3.3675 2.4675L1.62 2.8425L1.7925 4.635L0.6 6L1.7925 7.3575L1.62 9.15L3.3675 9.5325L4.275 11.0625L5.925 10.335L7.575 11.055L8.4825 9.525L10.23 9.1425L10.0575 7.3575L11.25 6ZM4.9725 8.3475L3.075 6.4425L3.75 5.7675L4.9725 6.9975L8.0475 3.915L8.7225 4.59L4.9725 8.3475Z" fill="currentColor"/>
+                </g>
+                <defs>
+                  <clipPath id="verified-{{ block.id }}">
+                    <rect width="12" height="12" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
+            </span>
+            <span class="curated-reviews__author-name">
+              {%- liquid
+                assign name = block.settings.author_name
+                assign title = block.settings.author_title
+                if name != blank and title != blank
+                  echo name | escape
+                  echo '. '
+                  echo title | escape
+                elsif name != blank
+                  echo name | escape
+                endif
+              -%}
+            </span>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .curated-reviews {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .curated-reviews__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .curated-reviews__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 0%;
+  }
+
+  .curated-reviews__quote {
+    max-width: 380px;
+    font-family: var(--font-body--family);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    text-align: center;
+    color: var(--color-foreground);
+    margin: 0;
+    padding: 0;
+  }
+
+  .curated-reviews__author {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .curated-reviews__verified-badge {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    color: var(--color-foreground);
+  }
+
+  .curated-reviews__verified-badge svg {
+    width: 12px;
+    height: 12px;
+    overflow: hidden;
+  }
+
+  .curated-reviews__author-name {
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: center;
+    color: var(--color-foreground);
+  }
+
+  @media screen and (max-width: 749px) {
+    .curated-reviews__wrapper {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      justify-content: flex-start;
+      gap: 0;
+      scrollbar-width: none;
+    }
+
+    .curated-reviews__wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .curated-reviews__card {
+      flex: 0 0 240px;
+      scroll-snap-align: center;
+      margin-inline-end: 24px;
+    }
+
+    .curated-reviews__card:last-child {
+      margin-inline-end: 0;
+    }
+
+    .curated-reviews__quote {
+      font-size: 18px;
+      line-height: 24px;
+      max-width: 240px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Curated reviews",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "\"Customer quote goes here.\""
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author name",
+          "default": "Jane D"
+        },
+        {
+          "type": "text",
+          "id": "author_title",
+          "label": "Author title",
+          "default": "Working Mom"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Curated reviews",
+      "settings": {
+        "color_scheme": "scheme-7",
+        "section_width": "page-width",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "quote": "\"By far the best vitamin out there. We're never going back\"",
+            "author_name": "Renee C",
+            "author_title": "Working Mom"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "\"We've tried so many brands. These are the only ones they actually ask for!\"",
+            "author_name": "Amy H",
+            "author_title": "Working Mom"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "\"At ease knowing the gaps are filled — and my kids actually take them!\"",
+            "author_name": "Ron D",
+            "author_title": "Clinician"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

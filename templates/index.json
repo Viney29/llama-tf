@@ -61,6 +61,46 @@
         "trust_4"
       ]
     },
+    "curated_reviews": {
+      "type": "curated-reviews",
+      "settings": {
+        "color_scheme": "scheme-7",
+        "section_width": "page-width",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "quote": "\"By far the best vitamin out there. We're never going back\"",
+            "author_name": "Renee C",
+            "author_title": "Working Mom"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "quote": "\"We've tried so many brands. These are the only ones they actually ask for!\"",
+            "author_name": "Amy H",
+            "author_title": "Working Mom"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "quote": "\"At ease knowing the gaps are filled — and my kids actually take them!\"",
+            "author_name": "Ron D",
+            "author_title": "Clinician"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ]
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -258,6 +298,7 @@
   },
   "order": [
     "hero_banner",
+    "curated_reviews",
     "product_list_fa6P9H"
   ]
 }
