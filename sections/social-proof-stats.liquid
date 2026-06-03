@@ -1,0 +1,266 @@
+<section
+  id="Section-{{ section.id }}"
+  class="social-proof-stats section section--full-width"
+  style="
+    --sps-padding-top: {{ section.settings.padding-block-start }}px;
+    --sps-padding-bottom: {{ section.settings.padding-block-end }}px;
+    --sps-heading-color: {{ section.settings.heading_color }};
+    --sps-text-color: {{ section.settings.text_color }};
+    --sps-border-color: {{ section.settings.heading_color | color_modify: 'alpha', 0.2 }};
+  "
+>
+  <div class="social-proof-stats__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="social-proof-stats__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="social-proof-stats__points">
+        {%- for block in section.blocks -%}
+          <div class="social-proof-stats__point" {{ block.shopify_attributes }}>
+            {%- if block.settings.value != blank -%}
+              <div class="social-proof-stats__value">{{ block.settings.value | escape }}</div>
+            {%- endif -%}
+            {%- if block.settings.label != blank -%}
+              <div class="social-proof-stats__label">{{ block.settings.label | escape }}</div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.note_text != blank -%}
+      <div class="social-proof-stats__note">{{ section.settings.note_text | escape }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* ── Social Proof Stats section ── */
+  .social-proof-stats {
+    position: relative;
+    padding-block: calc(var(--sps-padding-top) / 2) calc(var(--sps-padding-bottom) / 2);
+    background-color: #ffffff;
+    color: var(--sps-heading-color);
+    z-index: 0;
+  }
+
+  .social-proof-stats__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding-inline: 16px;
+  }
+
+  .social-proof-stats__heading {
+    font-family: "poppins bold", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    text-align: center;
+    color: var(--sps-heading-color);
+    max-width: 358px;
+    margin: 0;
+  }
+
+  .social-proof-stats__points {
+    display: flex;
+    justify-content: center;
+  }
+
+  .social-proof-stats__point {
+    flex: 1 1 0%;
+    padding-inline: 8px;
+  }
+
+  .social-proof-stats__point:not(:last-child) {
+    border-right: 1px solid var(--sps-border-color);
+  }
+
+  .social-proof-stats__value {
+    font-family: "poppins bold", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    text-align: center;
+    color: var(--sps-text-color);
+    margin-block-end: 4px;
+  }
+
+  .social-proof-stats__label {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 20.3px;
+    text-align: center;
+    color: var(--sps-text-color);
+  }
+
+  .social-proof-stats__note {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 12px;
+    line-height: 17.4px;
+    text-align: center;
+    color: var(--sps-text-color);
+    opacity: 0.9;
+    max-width: 100%;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .social-proof-stats {
+      padding-block: var(--sps-padding-top) var(--sps-padding-bottom);
+    }
+
+    .social-proof-stats__inner {
+      gap: 32px;
+      padding-inline: 256px;
+    }
+
+    .social-proof-stats__heading {
+      font-size: 40px;
+      line-height: 48px;
+      max-width: none;
+    }
+
+    .social-proof-stats__points {
+      max-width: 720px;
+    }
+
+    .social-proof-stats__point {
+      width: 240px;
+      flex: 0 0 auto;
+      padding-inline: 0;
+    }
+
+    .social-proof-stats__value {
+      font-size: 32px;
+      line-height: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Social proof stats",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See why 300,000+ families made the switch"
+    },
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Note text",
+      "default": "*Based on a 2025 survey of 313 customers. Not a clinical study."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "98%"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "of parents feel better"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social proof stats",
+      "settings": {
+        "heading": "See why 300,000+ families made the switch",
+        "note_text": "*Based on a 2025 survey of 313 customers. Not a clinical study.",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "value": "98%",
+            "label": "of parents feel better about their kids' nutrition"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "99%",
+            "label": "say their kids actually like it"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "88%",
+            "label": "noticed a real difference in their kids"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

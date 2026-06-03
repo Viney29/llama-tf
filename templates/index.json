@@ -261,6 +261,45 @@
         "allergen_7"
       ]
     },
+    "social_proof_stats": {
+      "type": "social-proof-stats",
+      "settings": {
+        "heading": "See why 300,000+ families made the switch",
+        "note_text": "*Based on a 2025 survey of 313 customers. Not a clinical study.",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "98%",
+            "label": "of parents feel better about their kids' nutrition"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "99%",
+            "label": "say their kids actually like it"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "88%",
+            "label": "noticed a real difference in their kids"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ]
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -462,6 +501,7 @@
     "ticker",
     "our_story",
     "tabbed_carousel",
+    "social_proof_stats",
     "product_list_fa6P9H"
   ]
 }
