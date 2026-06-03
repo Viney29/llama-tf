@@ -253,6 +253,13 @@
     padding-block-start: var(--padding-block-start, 64px);
     padding-block-end: var(--padding-block-end, 64px);
     padding-inline: 64px;
+    /* The carousel track (overflow-x: auto) clips visually, but its layout
+       overflow leaks up through the visible-overflow ancestors into the
+       document scroll region, causing page-wide horizontal scroll. Clip at the
+       section boundary (full viewport width) to contain it. overflow-x: clip
+       leaves the vertical axis visible, so the absolutely-positioned guarantee
+       badge and nav arrows (all within the 0–100% box) are unaffected. */
+    overflow-x: clip;
   }
 
   /* ---- Header ---- */
