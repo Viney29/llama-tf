@@ -61,6 +61,28 @@
         "trust_4"
       ]
     },
+    "tabbed_carousel": {
+      "type": "tabbed-product-carousel",
+      "settings": {
+        "heading": "Find The Right Fit For Your Family.",
+        "collection_tab_1": "kids",
+        "tab_1_label": "Kids",
+        "tab_1_cta_text": "Shop All Kids",
+        "collection_tab_2": "adults",
+        "tab_2_label": "Adults",
+        "tab_2_cta_text": "Shop All Adults",
+        "collection_tab_3": "bundle-save",
+        "tab_3_label": "Bundle & Save",
+        "tab_3_cta_text": "Shop All Bundles",
+        "tab_3_color": "#FF0000",
+        "products_to_show": 8,
+        "guarantee_heading": "100-Day Money-Back Guarantee",
+        "guarantee_text": "No Returns, No Hassle, No Questions.",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 64,
+        "padding-block-end": 64
+      }
+    },
     "ticker": {
       "type": "ticker",
       "settings": {
@@ -336,6 +358,7 @@
   "order": [
     "hero_banner",
     "ticker",
+    "tabbed_carousel",
     "curated_reviews",
     "product_list_fa6P9H"
   ]

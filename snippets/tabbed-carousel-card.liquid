@@ -1,0 +1,215 @@
+{% doc %}
+  Product card for the tabbed product carousel section.
+
+  Renders a product card with image, count badge, star rating,
+  flavor variant chips, subscription pricing, and quick add-to-cart.
+
+  @param {object} product - Shopify product object (required)
+  @param {string} section_id - The parent section ID for scoping
+
+  @example
+    {% render 'tabbed-carousel-card', product: product, section_id: section.id %}
+{% enddoc %}
+
+{% liquid
+  assign product = product | default: empty
+  assign section_id = section_id | default: ''
+
+  unless product != empty
+    break
+  endunless
+
+  assign current_variant = product.selected_or_first_available_variant
+
+  assign card_title = product.metafields.custom.short_title.value
+  if card_title == blank
+    assign card_title = product.title
+  endif
+
+  assign card_description = product.metafields.custom.short_description.value
+
+  assign count_value = product.metafields.custom.quantity_new.value
+
+  assign rating_value = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value
+
+  assign flavor_label = product.metafields.custom.custom_product_title_new.value
+  if flavor_label == blank
+    assign flavor_label = product.title
+  endif
+
+  assign related_variants = product.metafields.custom.related_variants.value
+  assign flavor_image = product.metafields.custom.flavor_image.value
+
+  assign sub_price = nil
+  if current_variant.selling_plan_allocations.size > 0
+    assign sub_price = current_variant.selling_plan_allocations.first.per_delivery_price
+  endif
+  if sub_price == nil
+    assign sub_price = product.price
+  endif
+
+  assign compare_price = product.compare_at_price
+%}
+
+<product-card-v2 class="tpc__card">
+  <a class="tpc__image-link" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    <div class="tpc__image-container">
+      {% if product.featured_image != blank %}
+        <img
+          class="tpc__image"
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          loading="lazy"
+          width="600"
+          height="600"
+        >
+      {% endif %}
+      {% if count_value != blank and count_value != 0 %}
+        <span class="tpc__count-badge">
+          <svg class="tpc__count-badge-bg" viewBox="0 0 36 26" aria-hidden="true">
+            <path d="M4 0h28a4 4 0 014 4v18a4 4 0 01-4 4H4a4 4 0 01-4-4V4a4 4 0 014-4z" fill="rgba(255,255,255,0.85)"/>
+          </svg>
+          <span class="tpc__count-badge-text">{{ count_value }} ct</span>
+        </span>
+      {% endif %}
+    </div>
+  </a>
+
+  <div class="tpc__info">
+    <div class="tpc__product-info">
+      <div class="tpc__details">
+        {% if rating_value != blank %}
+          <div class="tpc__rating">
+            <div class="tpc__rating-stars" aria-label="Rated {{ rating_value }} out of 5 stars">
+              {% assign rating_floor = rating_value | floor %}
+              {% assign rating_decimal = rating_value | minus: rating_floor %}
+              {% assign rating_partial_index = rating_floor | plus: 1 %}
+              {% for i in (1..5) %}
+                {% if i <= rating_floor %}
+                  <svg class="tpc__star tpc__star--full" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M10 0.846855C10.156 0.384382 10.78 0.384382 10.455 0.846855L10 2.62639L8.54072 7.33639C8.34848 7.95687 7.79714 8.37696 7.17504 8.37696H2.45272L6.27316 11.2879C6.77645 11.6714 6.98704 12.3511 6.7948 12.9716L5.33552 17.6816L9.15596 14.7706C9.65925 14.3872 10.3408 14.3872 10.844 14.7706L14.6645 17.6816L13.2052 12.9716C13.013 12.3511 13.2236 11.6714 13.7268 11.2879L17.5473 8.37696H12.825C12.2029 8.37696 11.6515 7.95687 11.4593 7.33639L10 2.62639Z" fill="currentColor"/>
+                  </svg>
+                {% elsif i == rating_partial_index and rating_decimal > 0 %}
+                  <svg class="tpc__star tpc__star--partial" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true">
+                    <defs>
+                      <clipPath id="star-clip-{{ product.id }}-{{ i }}">
+                        {% assign clip_pct = rating_decimal | times: 100 %}
+                        <rect x="0" y="0" width="{{ clip_pct }}%" height="100%"/>
+                      </clipPath>
+                    </defs>
+                    <path d="M10 2.62639L8.54072 7.33639C8.34848 7.95687 7.79714 8.37696 7.17504 8.37696H2.45272L6.27316 11.2879C6.77645 11.6714 6.98704 12.3511 6.7948 12.9716L5.33552 17.6816L9.15596 14.7706C9.65925 14.3872 10.3408 14.3872 10.844 14.7706L14.6645 17.6816L13.2052 12.9716C13.013 12.3511 13.2236 11.6714 13.7268 11.2879L17.5473 8.37696H12.825C12.2029 8.37696 11.6515 7.95687 11.4593 7.33639L10 2.62639Z" fill="rgba(104,0,64,0.2)"/>
+                    <path d="M10 2.62639L8.54072 7.33639C8.34848 7.95687 7.79714 8.37696 7.17504 8.37696H2.45272L6.27316 11.2879C6.77645 11.6714 6.98704 12.3511 6.7948 12.9716L5.33552 17.6816L9.15596 14.7706C9.65925 14.3872 10.3408 14.3872 10.844 14.7706L14.6645 17.6816L13.2052 12.9716C13.013 12.3511 13.2236 11.6714 13.7268 11.2879L17.5473 8.37696H12.825C12.2029 8.37696 11.6515 7.95687 11.4593 7.33639L10 2.62639Z" fill="currentColor" clip-path="url(#star-clip-{{ product.id }}-{{ i }})"/>
+                  </svg>
+                {% else %}
+                  <svg class="tpc__star tpc__star--empty" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M10 2.62639L8.54072 7.33639C8.34848 7.95687 7.79714 8.37696 7.17504 8.37696H2.45272L6.27316 11.2879C6.77645 11.6714 6.98704 12.3511 6.7948 12.9716L5.33552 17.6816L9.15596 14.7706C9.65925 14.3872 10.3408 14.3872 10.844 14.7706L14.6645 17.6816L13.2052 12.9716C13.013 12.3511 13.2236 11.6714 13.7268 11.2879L17.5473 8.37696H12.825C12.2029 8.37696 11.6515 7.95687 11.4593 7.33639L10 2.62639Z" fill="rgba(104,0,64,0.2)"/>
+                  </svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% if rating_count != blank %}
+              <span class="tpc__rating-count">({{ rating_count }})</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <a class="tpc__title" href="{{ product.url }}">{{ card_title }}</a>
+
+        {% if card_description != blank %}
+          <p class="tpc__description">{{ card_description }}</p>
+        {% endif %}
+      </div>
+
+      {% if related_variants != blank and related_variants.size > 0 %}
+        <div class="tpc__variants" role="list" aria-label="Available flavors">
+          {%- comment -%} Current product chip (active) {%- endcomment -%}
+          <button
+            class="tpc__variant-chip tpc__variant-chip--active"
+            role="listitem"
+            type="button"
+            data-product-url="{{ product.url }}"
+            data-product-image="{{ product.featured_image | image_url: width: 600 }}"
+            data-product-price="{{ sub_price | money }}"
+            data-product-compare-price="{{ compare_price | money }}"
+            data-product-title="{{ card_title | escape }}"
+            data-variant-id="{{ current_variant.id }}"
+            aria-pressed="true"
+          >
+            {% if flavor_image != blank %}
+              <img class="tpc__chip-icon" src="{{ flavor_image | image_url: width: 24 }}" alt="" width="12" height="12" loading="lazy">
+            {% endif %}
+            {{ flavor_label }}
+          </button>
+
+          {%- comment -%} Sibling product chips {%- endcomment -%}
+          {% for sibling in related_variants %}
+            {% if sibling.id == product.id %}
+              {% continue %}
+            {% endif %}
+
+            {% assign sibling_variant = sibling.selected_or_first_available_variant %}
+            {% assign sibling_flavor_label = sibling.metafields.custom.custom_product_title_new.value %}
+            {% if sibling_flavor_label == blank %}
+              {% assign sibling_flavor_label = sibling.title %}
+            {% endif %}
+
+            {% assign sibling_title = sibling.metafields.custom.short_title.value %}
+            {% if sibling_title == blank %}
+              {% assign sibling_title = sibling.title %}
+            {% endif %}
+
+            {% assign sibling_flavor_img = sibling.metafields.custom.flavor_image.value %}
+
+            {% assign sibling_sub_price = nil %}
+            {% if sibling_variant.selling_plan_allocations.size > 0 %}
+              {% assign sibling_sub_price = sibling_variant.selling_plan_allocations.first.per_delivery_price %}
+            {% endif %}
+            {% if sibling_sub_price == nil %}
+              {% assign sibling_sub_price = sibling.price %}
+            {% endif %}
+
+            <button
+              class="tpc__variant-chip"
+              role="listitem"
+              type="button"
+              data-product-url="{{ sibling.url }}"
+              data-product-image="{{ sibling.featured_image | image_url: width: 600 }}"
+              data-product-price="{{ sibling_sub_price | money }}"
+              data-product-compare-price="{{ sibling.compare_at_price | money }}"
+              data-product-title="{{ sibling_title | escape }}"
+              data-variant-id="{{ sibling_variant.id }}"
+              aria-pressed="false"
+            >
+              {% if sibling_flavor_img != blank %}
+                <img class="tpc__chip-icon" src="{{ sibling_flavor_img | image_url: width: 24 }}" alt="" width="12" height="12" loading="lazy">
+              {% endif %}
+              {{ sibling_flavor_label }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="tpc__footer">
+      <div class="tpc__prices">
+        <span class="tpc__price">
+          <span class="visually-hidden">Subscription price</span>
+          {{ sub_price | money }}
+        </span>
+        {% if compare_price != blank and compare_price > sub_price %}
+          <span class="tpc__compare-price">
+            <span class="visually-hidden">Original price</span>
+            {{ compare_price | money }}
+          </span>
+        {% endif %}
+      </div>
+      <form action="/cart/add" method="post">
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <button class="tpc__add-btn" type="submit" aria-label="Add {{ product.title | escape }} to cart">
+          ADD
+        </button>
+      </form>
+    </div>
+  </div>
+</product-card-v2>

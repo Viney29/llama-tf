@@ -1,0 +1,1014 @@
+{% liquid
+  assign collection_1 = section.settings.collection_tab_1
+  assign collection_2 = section.settings.collection_tab_2
+  assign collection_3 = section.settings.collection_tab_3
+  assign products_limit = section.settings.products_to_show
+
+  assign tab_1_label = section.settings.tab_1_label
+  assign tab_2_label = section.settings.tab_2_label
+  assign tab_3_label = section.settings.tab_3_label
+
+  assign tab_1_cta_text = section.settings.tab_1_cta_text
+  assign tab_2_cta_text = section.settings.tab_2_cta_text
+  assign tab_3_cta_text = section.settings.tab_3_cta_text
+
+  assign tab_3_color = section.settings.tab_3_color
+
+  assign guarantee_badge = section.settings.guarantee_badge
+  assign guarantee_heading = section.settings.guarantee_heading
+  assign guarantee_text_content = section.settings.guarantee_text
+
+  assign section_id = section.id
+
+  assign tab_1_cta_url = ''
+  if collection_1 != blank
+    assign tab_1_cta_url = collection_1.url
+  endif
+  assign tab_2_cta_url = ''
+  if collection_2 != blank
+    assign tab_2_cta_url = collection_2.url
+  endif
+  assign tab_3_cta_url = ''
+  if collection_3 != blank
+    assign tab_3_cta_url = collection_3.url
+  endif
+%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<tabbed-product-carousel
+  class="tpc section section--full-width color-{{ section.settings.color_scheme }}"
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+    --tpc-tab-3-color: {{ tab_3_color }};
+  "
+>
+  <div class="tpc__header">
+    <h2 class="tpc__heading">{{ section.settings.heading | escape }}</h2>
+
+    <div class="tpc__tabs" role="tablist" aria-label="Product categories">
+      <button
+        class="tpc__tab tpc__tab--active"
+        role="tab"
+        type="button"
+        id="tpc-tab-{{ section_id }}-0"
+        aria-controls="tpc-panel-{{ section_id }}-0"
+        aria-selected="true"
+      >
+        {{ tab_1_label | escape }}
+      </button>
+      <button
+        class="tpc__tab"
+        role="tab"
+        type="button"
+        id="tpc-tab-{{ section_id }}-1"
+        aria-controls="tpc-panel-{{ section_id }}-1"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        {{ tab_2_label | escape }}
+      </button>
+      <button
+        class="tpc__tab tpc__tab--tab3"
+        role="tab"
+        type="button"
+        id="tpc-tab-{{ section_id }}-2"
+        aria-controls="tpc-panel-{{ section_id }}-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        {{ tab_3_label | escape }}
+      </button>
+    </div>
+  </div>
+
+  {% if guarantee_badge != blank %}
+    <div class="tpc__guarantee-badge">
+      <img
+        src="{{ guarantee_badge | image_url: width: 200 }}"
+        alt="{{ guarantee_heading | escape }}"
+        width="154"
+        height="154"
+        loading="lazy"
+      >
+    </div>
+  {% endif %}
+
+  {%- comment -%} Tab Panel 1 {%- endcomment -%}
+  <div
+    class="tpc__panel tpc__panel--active"
+    role="tabpanel"
+    id="tpc-panel-{{ section_id }}-0"
+    aria-labelledby="tpc-tab-{{ section_id }}-0"
+    data-cta-url="{{ tab_1_cta_url }}"
+    data-cta-text="{{ tab_1_cta_text | escape }}"
+  >
+    <div class="tpc__carousel-wrapper">
+      <div class="tpc__track">
+        {% if collection_1 != blank %}
+          {% for product in collection_1.products limit: products_limit %}
+            <div class="tpc__slide">
+              {% render 'tabbed-carousel-card', product: product, section_id: section_id %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button class="tpc__nav-btn tpc__nav-btn--prev tpc__nav-btn--disabled" type="button" aria-label="Move to previous carousel slide" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="tpc__nav-btn tpc__nav-btn--next" type="button" aria-label="Move to next carousel slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="tpc__progress" aria-hidden="true">
+      <div class="tpc__progress-bar"></div>
+    </div>
+  </div>
+
+  {%- comment -%} Tab Panel 2 {%- endcomment -%}
+  <div
+    class="tpc__panel"
+    role="tabpanel"
+    id="tpc-panel-{{ section_id }}-1"
+    aria-labelledby="tpc-tab-{{ section_id }}-1"
+    data-cta-url="{{ tab_2_cta_url }}"
+    data-cta-text="{{ tab_2_cta_text | escape }}"
+    hidden
+  >
+    <div class="tpc__carousel-wrapper">
+      <div class="tpc__track">
+        {% if collection_2 != blank %}
+          {% for product in collection_2.products limit: products_limit %}
+            <div class="tpc__slide">
+              {% render 'tabbed-carousel-card', product: product, section_id: section_id %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button class="tpc__nav-btn tpc__nav-btn--prev tpc__nav-btn--disabled" type="button" aria-label="Move to previous carousel slide" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="tpc__nav-btn tpc__nav-btn--next" type="button" aria-label="Move to next carousel slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="tpc__progress" aria-hidden="true">
+      <div class="tpc__progress-bar"></div>
+    </div>
+  </div>
+
+  {%- comment -%} Tab Panel 3 {%- endcomment -%}
+  <div
+    class="tpc__panel"
+    role="tabpanel"
+    id="tpc-panel-{{ section_id }}-2"
+    aria-labelledby="tpc-tab-{{ section_id }}-2"
+    data-cta-url="{{ tab_3_cta_url }}"
+    data-cta-text="{{ tab_3_cta_text | escape }}"
+    hidden
+  >
+    <div class="tpc__carousel-wrapper">
+      <div class="tpc__track">
+        {% if collection_3 != blank %}
+          {% for product in collection_3.products limit: products_limit %}
+            <div class="tpc__slide">
+              {% render 'tabbed-carousel-card', product: product, section_id: section_id %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button class="tpc__nav-btn tpc__nav-btn--prev tpc__nav-btn--disabled" type="button" aria-label="Move to previous carousel slide" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="tpc__nav-btn tpc__nav-btn--next" type="button" aria-label="Move to next carousel slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="tpc__progress" aria-hidden="true">
+      <div class="tpc__progress-bar"></div>
+    </div>
+  </div>
+
+  {%- comment -%} Mobile guarantee block {%- endcomment -%}
+  {% if guarantee_heading != blank or guarantee_text_content != blank %}
+    <div class="tpc__mobile-guarantee">
+      {% if guarantee_badge != blank %}
+        <img
+          class="tpc__mobile-guarantee-badge"
+          src="{{ guarantee_badge | image_url: width: 160 }}"
+          alt=""
+          width="80"
+          height="80"
+          loading="lazy"
+        >
+      {% endif %}
+      <div class="tpc__mobile-guarantee-content">
+        {% if guarantee_heading != blank %}
+          <p class="tpc__mobile-guarantee-heading">{{ guarantee_heading | escape }}</p>
+        {% endif %}
+        {% if guarantee_text_content != blank %}
+          <p class="tpc__mobile-guarantee-text">{{ guarantee_text_content | escape }}</p>
+        {% endif %}
+      </div>
+      <button class="tpc__mobile-guarantee-dismiss" type="button" aria-label="Dismiss guarantee message">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+
+  {%- comment -%} CTA link {%- endcomment -%}
+  <div class="tpc__cta-wrapper">
+    <a class="tpc__cta" href="{{ tab_1_cta_url }}">
+      <span class="tpc__cta-text">{{ tab_1_cta_text | escape }}</span>
+    </a>
+  </div>
+</tabbed-product-carousel>
+
+{% stylesheet %}
+  /* ---- Layout ---- */
+  tabbed-product-carousel.tpc {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 32px;
+    padding-block-start: var(--padding-block-start, 64px);
+    padding-block-end: var(--padding-block-end, 64px);
+    padding-inline: 64px;
+  }
+
+  /* ---- Header ---- */
+  .tpc__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .tpc__heading {
+    font-family: "poppins bold", sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 48px;
+    text-transform: capitalize;
+    color: #680040;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* ---- Tabs ---- */
+  .tpc__tabs {
+    display: flex;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .tpc__tab {
+    flex: 1 1 0%;
+    padding: 0 5px 8px;
+    border: none;
+    border-bottom: 2px solid rgba(104, 0, 64, 0.2);
+    background: none;
+    color: #000000;
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, font-weight 0.2s;
+  }
+
+  .tpc__tab:focus-visible {
+    outline: 2px solid #680040;
+    outline-offset: -2px;
+  }
+
+  .tpc__tab--active {
+    border-bottom-color: #680040;
+    color: #680040;
+    font-weight: 700;
+  }
+
+  .tpc__tab--tab3 {
+    color: var(--tpc-tab-3-color, #FF0000);
+  }
+
+  .tpc__tab--tab3.tpc__tab--active {
+    border-bottom-color: #680040;
+  }
+
+  /* ---- Guarantee badge (desktop) ---- */
+  .tpc__guarantee-badge {
+    position: absolute;
+    top: 67px;
+    right: 60px;
+    width: 154px;
+    height: 154px;
+    transform: rotate(13deg);
+    transform-origin: center center;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .tpc__guarantee-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* ---- Tab panels ---- */
+  .tpc__panel {
+    display: none;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .tpc__panel--active {
+    display: flex;
+  }
+
+  .tpc__panel[hidden] {
+    display: none;
+  }
+
+  /* ---- Carousel ---- */
+  .tpc__carousel-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  .tpc__track {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .tpc__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tpc__slide {
+    min-width: 328px;
+    max-width: 328px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  /* ---- Navigation buttons ---- */
+  .tpc__nav-btn {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid rgba(104, 0, 64, 0.2);
+    border-radius: 28px;
+    color: rgba(104, 0, 64, 0.4);
+    cursor: pointer;
+    z-index: 2;
+    transform: translateY(calc(-50% - 20px));
+    transition: border-color 0.2s, opacity 0.2s;
+  }
+
+  .tpc__nav-btn:focus-visible {
+    outline: 2px solid currentcolor;
+    outline-offset: 2px;
+  }
+
+  .tpc__nav-btn--prev {
+    left: -20px;
+  }
+
+  .tpc__nav-btn--next {
+    right: -20px;
+  }
+
+  .tpc__nav-btn--disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .tpc__nav-btn svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Progress bar (mobile only) ---- */
+  .tpc__progress {
+    display: none;
+    height: 3px;
+    background: rgba(104, 0, 64, 0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .tpc__progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #680040;
+    border-radius: 2px;
+    transition: width 0.1s linear;
+  }
+
+  /* ---- CTA button ---- */
+  .tpc__cta-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .tpc__cta {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 416px;
+    min-height: 48px;
+    padding: 12px 24px 10px;
+    border: 2px solid #680040;
+    border-radius: 24px;
+    background: transparent;
+    color: #680040;
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .tpc__cta:hover {
+    background-color: #680040;
+    color: #ffffff;
+  }
+
+  .tpc__cta:focus-visible {
+    outline: 2px solid #680040;
+    outline-offset: 2px;
+  }
+
+  /* ---- Mobile guarantee block ---- */
+  .tpc__mobile-guarantee {
+    display: none;
+  }
+
+  /* ---- Card-level styles ---- */
+  .tpc__card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tpc__image-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .tpc__image-container {
+    position: relative;
+    padding: 57px;
+    aspect-ratio: 1 / 1;
+    background: rgba(104, 0, 64, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .tpc__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .tpc__count-badge {
+    display: flex;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    justify-content: center;
+    align-items: center;
+    width: 37px;
+    height: 26px;
+  }
+
+  .tpc__count-badge-bg {
+    position: absolute;
+    inset: 0;
+    width: 37px;
+    height: 26px;
+    overflow: hidden;
+  }
+
+  .tpc__count-badge-text {
+    position: relative;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 13px;
+    color: #000000;
+  }
+
+  /* ---- Product info ---- */
+  .tpc__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    flex: 1 1 0%;
+  }
+
+  .tpc__product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tpc__details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* ---- Rating ---- */
+  .tpc__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tpc__rating-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tpc__star {
+    flex-shrink: 0;
+  }
+
+  .tpc__star--full {
+    color: #680040;
+  }
+
+  .tpc__star--partial {
+    color: #680040;
+  }
+
+  .tpc__star--empty {
+    color: rgba(104, 0, 64, 0.2);
+  }
+
+  .tpc__rating-count {
+    margin-left: 2px;
+    margin-top: 2px;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: #680040;
+  }
+
+  /* ---- Title & description ---- */
+  .tpc__title {
+    display: block;
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #680040;
+    text-decoration: none;
+  }
+
+  .tpc__title:hover {
+    text-decoration: underline;
+  }
+
+  .tpc__title:focus-visible {
+    outline: 1px auto rgb(0, 95, 204);
+    outline-offset: 1px;
+  }
+
+  .tpc__description {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: #000000;
+    margin: 0;
+  }
+
+  /* ---- Variant chips ---- */
+  .tpc__variants {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tpc__variant-chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    border: 1px solid rgba(0, 62, 107, 0.2);
+    border-radius: 4px;
+    background: transparent;
+    color: #000000;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+
+  .tpc__variant-chip:focus-visible {
+    outline: 2px solid #680040;
+    outline-offset: 1px;
+  }
+
+  .tpc__variant-chip--active {
+    border-color: #680040;
+    background: rgba(104, 0, 64, 0.05);
+    color: #680040;
+    font-weight: 500;
+  }
+
+  .tpc__chip-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  /* ---- Footer / Prices ---- */
+  .tpc__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tpc__prices {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tpc__price {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #680040;
+  }
+
+  .tpc__compare-price {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    color: #4B413A;
+    text-decoration: line-through;
+  }
+
+  .tpc__add-btn {
+    display: inline-block;
+    padding: 0 24px;
+    height: 36px;
+    border: none;
+    border-radius: 24px;
+    background: #680040;
+    color: #ffffff;
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .tpc__add-btn:hover {
+    opacity: 0.85;
+  }
+
+  .tpc__add-btn:focus-visible {
+    outline: 2px solid #680040;
+    outline-offset: 2px;
+  }
+
+  /* ---- Mobile responsive ---- */
+  @media screen and (max-width: 749px) {
+    tabbed-product-carousel.tpc {
+      padding-inline: 16px;
+      gap: 24px;
+    }
+
+    .tpc__heading {
+      font-size: 28px;
+      line-height: 34px;
+    }
+
+    .tpc__header {
+      gap: 24px;
+    }
+
+    .tpc__tabs {
+      max-width: 100%;
+    }
+
+    .tpc__guarantee-badge {
+      display: none;
+    }
+
+    .tpc__slide {
+      min-width: 60vw;
+      max-width: 60vw;
+    }
+
+    .tpc__nav-btn {
+      display: none;
+    }
+
+    .tpc__progress {
+      display: block;
+    }
+
+    .tpc__mobile-guarantee {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(104, 0, 64, 0.05);
+      border-radius: 8px;
+    }
+
+    .tpc__mobile-guarantee-badge {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .tpc__mobile-guarantee-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .tpc__mobile-guarantee-heading {
+      font-family: "poppins bold", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 18px;
+      color: #680040;
+      margin: 0;
+    }
+
+    .tpc__mobile-guarantee-text {
+      font-family: "ff good pro narrow", sans-serif;
+      font-size: 13px;
+      line-height: 16px;
+      color: #000000;
+      margin: 0;
+    }
+
+    .tpc__mobile-guarantee-dismiss {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      background: none;
+      color: #680040;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .tpc__mobile-guarantee-dismiss:focus-visible {
+      outline: 2px solid #680040;
+      outline-offset: 1px;
+    }
+
+    .tpc__mobile-guarantee--hidden {
+      display: none;
+    }
+
+    .tpc__cta {
+      max-width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tpc__track {
+      scroll-behavior: auto;
+    }
+
+    .tpc__tab,
+    .tpc__variant-chip,
+    .tpc__nav-btn,
+    .tpc__add-btn,
+    .tpc__cta {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+<script type="module" src="{{ 'tabbed-product-carousel.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Tabbed product carousel",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find The Right Fit For Your Family."
+    },
+    {
+      "type": "header",
+      "content": "Tab 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_tab_1",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab label",
+      "default": "Kids"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_cta_text",
+      "label": "CTA text",
+      "default": "Shop All Kids"
+    },
+    {
+      "type": "header",
+      "content": "Tab 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_tab_2",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab label",
+      "default": "Adults"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_cta_text",
+      "label": "CTA text",
+      "default": "Shop All Adults"
+    },
+    {
+      "type": "header",
+      "content": "Tab 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_tab_3",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab label",
+      "default": "Bundle & Save"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_cta_text",
+      "label": "CTA text",
+      "default": "Shop All Bundles"
+    },
+    {
+      "type": "color",
+      "id": "tab_3_color",
+      "label": "Tab 3 text color",
+      "default": "#FF0000"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Guarantee"
+    },
+    {
+      "type": "image_picker",
+      "id": "guarantee_badge",
+      "label": "Badge image"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_heading",
+      "label": "Heading",
+      "default": "100-Day Money-Back Guarantee"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Body text",
+      "default": "No Returns, No Hassle, No Questions."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabbed product carousel"
+    }
+  ]
+}
+{% endschema %}
