@@ -1,0 +1,474 @@
+{% liquid
+  assign hero_image = section.settings.image
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign subtext = section.settings.subtext
+  assign button_text = section.settings.button_text
+  assign button_link = section.settings.button_link
+  assign min_height = section.settings.min_height_desktop
+%}
+
+<div
+  class="hero-banner section section--full-width"
+  style="
+    --hero-banner-min-height: {{ min_height }}px;
+    --hero-banner-content-bg: {{ section.settings.desktop_content_bg }};
+    --hero-banner-heading-color: {{ section.settings.heading_color }};
+    --hero-banner-text-color: {{ section.settings.text_color }};
+    --hero-banner-button-bg: {{ section.settings.button_bg }};
+    --hero-banner-button-text: {{ section.settings.button_text_color }};
+    --hero-banner-button-hover-bg: {{ section.settings.button_hover_bg }};
+  "
+>
+  <div class="hero-banner__image-container">
+    {%- if hero_image != blank -%}
+      {{
+        hero_image
+        | image_url: width: hero_image.width
+        | image_tag:
+          class: 'hero-banner__image',
+          sizes: '(min-width: 750px) 50vw, 100vw',
+          widths: '375,550,750,1100,1500',
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: heading
+      }}
+    {%- else -%}
+      <img
+        class="hero-banner__image"
+        src="{{ 'llama-naturals-june-2024-shot-19-3-401a69e20758.svg' | asset_url }}"
+        alt="{{ heading | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        width="624"
+        height="624"
+      >
+    {%- endif -%}
+  </div>
+
+  <div class="hero-banner__content">
+    <div class="hero-banner__text-block">
+      {%- if eyebrow != blank -%}
+        <p class="hero-banner__eyebrow">{{ eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if heading != blank -%}
+        <h2 class="hero-banner__heading">{{ heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if subtext != blank -%}
+        <p class="hero-banner__subtext">{{ subtext | escape }}</p>
+      {%- endif -%}
+
+      {%- if button_text != blank -%}
+        <div class="hero-banner__button-wrapper">
+          <a
+            class="hero-banner__button"
+            {% if button_link != blank %}href="{{ button_link }}"{% endif %}
+            {% if button_link == blank %}role="link" aria-disabled="true"{% endif %}
+          >
+            <span>{{ button_text | escape }}</span>
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="hero-banner__trust-icons" role="list">
+          {%- for block in section.blocks -%}
+            <div class="hero-banner__trust-icon" role="listitem" {{ block.shopify_attributes }}>
+              <div class="hero-banner__trust-icon-img">
+                {%- if block.settings.icon != blank -%}
+                  {{
+                    block.settings.icon
+                    | image_url: width: 80
+                    | image_tag:
+                      class: 'hero-banner__icon',
+                      loading: 'eager',
+                      width: 40,
+                      height: 40,
+                      alt: block.settings.label
+                  }}
+                {%- elsif block.settings.icon_asset != blank -%}
+                  <img
+                    class="hero-banner__icon"
+                    src="{{ block.settings.icon_asset | asset_url }}"
+                    alt="{{ block.settings.label | escape }}"
+                    loading="eager"
+                    width="40"
+                    height="40"
+                  >
+                {%- endif -%}
+              </div>
+              {%- if block.settings.label != blank -%}
+                <span class="hero-banner__trust-icon-label">{{ block.settings.label | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .hero-banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    z-index: 0;
+  }
+
+  /* ── Image container ── */
+  .hero-banner__image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+
+  .hero-banner__image {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Content area ── */
+  .hero-banner__content {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 16px 24px 16px;
+    background-color: #ffffff;
+  }
+
+  .hero-banner__text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── Typography ── */
+  .hero-banner__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: var(--hero-banner-text-color);
+  }
+
+  .hero-banner__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 48px;
+    text-transform: capitalize;
+    color: var(--hero-banner-heading-color);
+  }
+
+  .hero-banner__subtext {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--hero-banner-text-color);
+  }
+
+  /* ── Button ── */
+  .hero-banner__button-wrapper {
+    display: flex;
+    margin-top: 8px;
+  }
+
+  .hero-banner__button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 12px 24px;
+    min-height: 44px;
+    background-color: var(--hero-banner-button-bg);
+    color: var(--hero-banner-button-text);
+    border: 1px solid var(--hero-banner-button-bg);
+    border-radius: 24px;
+    font-family: var(--font-heading--family);
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 14px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .hero-banner__button:hover {
+    background-color: var(--hero-banner-button-hover-bg);
+    border-color: var(--hero-banner-button-hover-bg);
+  }
+
+  .hero-banner__button:focus-visible {
+    outline: 2px solid var(--hero-banner-button-bg);
+    outline-offset: 2px;
+  }
+
+  /* ── Trust icons ── */
+  .hero-banner__trust-icons {
+    display: flex;
+    gap: 16px;
+    padding: 0 6px;
+    margin-top: 20px;
+  }
+
+  .hero-banner__trust-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1 1 0%;
+  }
+
+  .hero-banner__trust-icon-img {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .hero-banner__icon {
+    width: 40px;
+    height: 40px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .hero-banner__trust-icon-label {
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: center;
+    color: var(--hero-banner-text-color);
+  }
+
+  /* ── Desktop layout (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .hero-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: var(--hero-banner-min-height);
+    }
+
+    .hero-banner__image-container {
+      grid-column: 2;
+      grid-row: 1;
+      aspect-ratio: auto;
+      height: 100%;
+    }
+
+    .hero-banner__image {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-banner__content {
+      grid-column: 1;
+      grid-row: 1;
+      justify-content: flex-start;
+      padding: 160px 64px 64px 64px;
+      background-color: var(--hero-banner-content-bg);
+    }
+
+    .hero-banner__text-block {
+      gap: 0;
+      max-width: 527px;
+    }
+
+    .hero-banner__heading {
+      margin: 10px 0;
+      max-width: 600px;
+    }
+
+    .hero-banner__button-wrapper {
+      margin-top: 24px;
+      max-width: 412px;
+    }
+
+    .hero-banner__trust-icons {
+      margin-top: 24px;
+      max-width: 412px;
+    }
+  }
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    .hero-banner__button {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "2M+ UNITS SOLD | 10K+ 5 STAR REVIEWS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Gummies That Start with Real Fruit. Not Candy."
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Whole-food nutrition kids actually eat."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Starter Pack"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "desktop_content_bg",
+      "label": "Content background (desktop)",
+      "default": "#fac0da"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button hover background",
+      "default": "#410128"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "number",
+      "id": "min_height_desktop",
+      "label": "Min height desktop (px)",
+      "default": 600
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust-icon",
+      "name": "Trust icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon SVG filename",
+          "info": "Fallback SVG from theme assets folder (e.g. icon-name.svg)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner",
+      "blocks": [
+        {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "parents-owned-72812360a920.svg",
+            "label": "Parent Owned"
+          }
+        },
+        {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "third-party-tested-thick-0ba1127a2cd6.svg",
+            "label": "3rd Party Tested"
+          }
+        },
+        {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "no-allergen-92b7682c-cde7-4c18-927c-e61c283f4603-11cba9fe64c6.svg",
+            "label": "Allergen Free"
+          }
+        },
+        {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "organic-da50b6fd1381.svg",
+            "label": "USDA Organic"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

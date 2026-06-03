@@ -9,82 +9,57 @@
  */
  {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "hero_banner": {
+      "type": "hero-banner",
+      "settings": {
+        "eyebrow": "2M+ UNITS SOLD | 10K+ 5 STAR REVIEWS",
+        "heading": "Gummies That Start with Real Fruit. Not Candy.",
+        "subtext": "Whole-food nutrition kids actually eat.",
+        "button_text": "Shop Starter Pack",
+        "desktop_content_bg": "#fac0da",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "button_bg": "#680040",
+        "button_text_color": "#ffffff",
+        "button_hover_bg": "#410128",
+        "min_height_desktop": 600
+      },
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "trust_1": {
+          "type": "trust-icon",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground-heading)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "icon_asset": "parents-owned-72812360a920.svg",
+            "label": "Parent Owned"
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "trust_2": {
+          "type": "trust-icon",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-secondary",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "icon_asset": "third-party-tested-thick-0ba1127a2cd6.svg",
+            "label": "3rd Party Tested"
+          }
+        },
+        "trust_3": {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "no-allergen-92b7682c-cde7-4c18-927c-e61c283f4603-11cba9fe64c6.svg",
+            "label": "Allergen Free"
+          }
+        },
+        "trust_4": {
+          "type": "trust-icon",
+          "settings": {
+            "icon_asset": "organic-da50b6fd1381.svg",
+            "label": "USDA Organic"
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
-      "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-6",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
-      }
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "trust_4"
+      ]
     },
     "product_list_fa6P9H": {
       "type": "product-list",
@@ -282,7 +257,7 @@
     }
   },
   "order": [
-    "hero_jVaWmY",
+    "hero_banner",
     "product_list_fa6P9H"
   ]
 }
