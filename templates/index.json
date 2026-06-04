@@ -627,6 +627,54 @@
         "expert_2",
         "expert_3"
       ]
+    },
+    "press_mentions": {
+      "type": "press-mentions",
+      "settings": {
+        "background_color": "#a31c69",
+        "logo_height": 20,
+        "gap": 198,
+        "gap_mobile": 56,
+        "scroll_duration": 36,
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "logo_1": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/parents-logo-7b5082b40605.png",
+            "alt_text": "Press logo 1"
+          }
+        },
+        "logo_2": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/erewhon-logo-9f1850624258.png",
+            "alt_text": "Press logo 2"
+          }
+        },
+        "logo_3": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-health-4967559f62e4.png",
+            "alt_text": "Press logo 3"
+          }
+        },
+        "logo_4": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-healthline-7c341fed8f14.png",
+            "alt_text": "Press logo 4"
+          }
+        }
+      },
+      "block_order": [
+        "logo_1",
+        "logo_2",
+        "logo_3",
+        "logo_4"
+      ]
     }
   },
   "order": [
@@ -638,6 +686,7 @@
     "social_proof_stats",
     "product_list_fa6P9H",
     "difference_table",
-    "multi_column"
+    "multi_column",
+    "press_mentions"
   ]
 }
