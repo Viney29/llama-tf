@@ -9,6 +9,89 @@
  */
  {
   "sections": {
+    "hero_offer": {
+      "type": "hero-offer",
+      "settings": {
+        "highlight_1": "Daily multivitamin, immune, and gut support in one simple routine",
+        "highlight_2": "Made from real fruit and no sugar cane",
+        "highlight_3": "A taste kids actually enjoy - even picky eaters",
+        "benefit_1": "Free Shipping",
+        "benefit_2": "Lifetime discount",
+        "benefit_3": "Easily skip or cancel anytime",
+        "additional_1_text": "Delivered every month",
+        "additional_2_text": "100 Day Money Back Guarantee",
+        "background_color": "#F2DDE8",
+        "accent_color": "#680040",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "cta_bg": "#680040",
+        "cta_text": "#FFFFFF",
+        "free_color": "#D7272E",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "label_1": {
+          "type": "label",
+          "settings": {
+            "text": "BUY 2, GET 1 FREE FOR LIFE",
+            "background_color": "#D9384A"
+          }
+        },
+        "label_2": {
+          "type": "label",
+          "settings": {
+            "text": "PARENT'S CHOICE",
+            "background_color": "#663AB5"
+          }
+        },
+        "child_1": {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Multivitamin - Strawberry",
+            "is_free": false,
+            "tag_1": "Strawberry",
+            "tag_2": "90ct",
+            "description": "Daily Whole Food Nutrition"
+          }
+        },
+        "child_2": {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Pre & Probiotic - Mixed Berry",
+            "is_free": false,
+            "tag_1": "Mixed Berry",
+            "tag_2": "60ct",
+            "description": "3-in-1 Digestive Support"
+          }
+        },
+        "child_3": {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Elderberry Immunity",
+            "is_free": true,
+            "tag_1": "Elderberry",
+            "tag_2": "60ct",
+            "description": "Daily 3-in-1 Immune Defense"
+          }
+        },
+        "child_4": {
+          "type": "child-product",
+          "settings": {
+            "name": "Llama Stickers",
+            "is_free": true
+          }
+        }
+      },
+      "block_order": [
+        "label_1",
+        "label_2",
+        "child_1",
+        "child_2",
+        "child_3",
+        "child_4"
+      ]
+    },
     "hero_banner": {
       "type": "hero-banner",
       "settings": {
@@ -761,6 +844,7 @@
     }
   },
   "order": [
+    "hero_offer",
     "hero_banner",
     "curated_reviews",
     "ticker",

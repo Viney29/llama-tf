@@ -1,0 +1,1323 @@
+{% liquid
+  assign product = section.settings.product
+  assign bg_color = section.settings.background_color
+  assign accent_color = section.settings.accent_color
+  assign heading_color = section.settings.heading_color
+  assign text_color = section.settings.text_color
+  assign cta_bg = section.settings.cta_bg
+  assign cta_text = section.settings.cta_text
+  assign free_color = section.settings.free_color
+
+  assign price = 0
+  assign compare_at_price = 0
+  assign first_variant_id = ''
+  assign selling_plan_id = ''
+  assign show_compare = false
+
+  if product != blank
+    assign price = product.price
+    assign compare_at_price = product.compare_at_price
+
+    assign first_variant_id = product.selected_or_first_available_variant.id
+
+    for sp_group in product.selling_plan_groups limit: 1
+      for sp in sp_group.selling_plans limit: 1
+        assign selling_plan_id = sp.id
+      endfor
+    endfor
+
+    if compare_at_price != blank
+      if compare_at_price > price
+        assign show_compare = true
+      endif
+    endif
+
+    assign rating_meta = product.metafields.reviews.rating
+    assign rating_count_meta = product.metafields.reviews.rating_count
+    assign has_rating = false
+    assign full_stars = 0
+    assign has_half = false
+    assign half_position = 0
+    assign empty_stars = 5
+    assign rating_count = 0
+
+    if rating_meta != blank
+      assign has_rating = true
+      assign rating_val = rating_meta.value.rating | times: 1.0
+      assign full_stars = rating_val | floor
+      assign decimal_part = rating_val | minus: full_stars
+      if decimal_part >= 0.25
+        assign has_half = true
+      endif
+      assign half_position = full_stars | plus: 1
+      assign total_shown = full_stars
+      if has_half
+        assign total_shown = full_stars | plus: 1
+      endif
+      assign empty_stars = 5 | minus: total_shown
+    endif
+
+    if rating_count_meta != blank
+      assign rating_count = rating_count_meta.value
+    endif
+
+    assign gallery_sizes = '(min-width: 750px) 544px, 100vw'
+  endif
+%}
+
+<hero-offer-section>
+  <section
+    id="Section-{{ section.id }}"
+    class="hero-offer section section--full-width"
+    style="
+      --ho-padding-top: {{ section.settings.padding-block-start }}px;
+      --ho-padding-bottom: {{ section.settings.padding-block-end }}px;
+      --ho-bg: {{ bg_color }};
+      --ho-accent: {{ accent_color }};
+      --ho-heading: {{ heading_color }};
+      --ho-text: {{ text_color }};
+      --ho-cta-bg: {{ cta_bg }};
+      --ho-cta-text: {{ cta_text }};
+      --ho-free: {{ free_color }};
+      --ho-accent-light: {{ accent_color | color_modify: 'alpha', 0.1 }};
+      --ho-divider: {{ accent_color | color_modify: 'alpha', 0.2 }};
+    "
+  >
+    {%- if product != blank -%}
+      <div class="hero-offer__container">
+        {%- comment -%} Gallery half {%- endcomment -%}
+        <div class="hero-offer__gallery">
+          <div class="hero-offer__gallery-wrapper">
+            <div class="hero-offer__gallery-main">
+              <div class="hero-offer__gallery-track">
+                {%- for image in product.images -%}
+                  <div class="hero-offer__slide" data-index="{{ forloop.index0 }}">
+                    {%- if forloop.first -%}
+                      {{ image | image_url: width: image.width | image_tag: sizes: gallery_sizes, widths: '375,550,750,1100', loading: 'eager', fetchpriority: 'high', class: 'hero-offer__slide-img', alt: product.title }}
+                    {%- else -%}
+                      {{ image | image_url: width: image.width | image_tag: sizes: gallery_sizes, widths: '375,550,750,1100', loading: 'lazy', class: 'hero-offer__slide-img', alt: product.title }}
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+
+              {%- assign has_labels = false -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'label' -%}
+                  {%- assign has_labels = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if has_labels -%}
+                <div class="hero-offer__labels">
+                  {%- for block in section.blocks -%}
+                    {%- if block.type == 'label' -%}
+                      <span
+                        class="hero-offer__label"
+                        style="background-color: {{ block.settings.background_color }};"
+                        {{ block.shopify_attributes }}
+                      >
+                        {{- block.settings.text | escape -}}
+                      </span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+            {%- if product.images.size > 1 -%}
+              <div class="hero-offer__thumbnails">
+                {%- for image in product.images -%}
+                  <button
+                    class="hero-offer__thumbnail{% if forloop.first %} hero-offer__thumbnail--active{% endif %}"
+                    type="button"
+                    data-index="{{ forloop.index0 }}"
+                    aria-label="View image {{ forloop.index }}"
+                    aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                  >
+                    {{ image | image_url: width: 144 | image_tag: loading: 'lazy', class: 'hero-offer__thumbnail-img', alt: product.title }}
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- comment -%} Details half {%- endcomment -%}
+        <div class="hero-offer__details">
+          {%- if has_rating -%}
+            <div class="hero-offer__rating">
+              <div class="hero-offer__stars">
+                {%- for i in (1..5) -%}
+                  {%- if i <= full_stars -%}
+                    <span class="hero-offer__star">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 1.12l1.85 3.95 4.33.52-3.2 2.93.83 4.36L8 10.62l-3.81 2.26.83-4.36-3.2-2.93 4.33-.52L8 1.12z" fill="currentColor"/>
+                      </svg>
+                    </span>
+                  {%- elsif has_half and i == half_position -%}
+                    <span class="hero-offer__star">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <defs>
+                          <clipPath id="ho-half-{{ section.id }}">
+                            <rect x="0" y="0" width="8" height="16"/>
+                          </clipPath>
+                        </defs>
+                        <path d="M8 1.12l1.85 3.95 4.33.52-3.2 2.93.83 4.36L8 10.62l-3.81 2.26.83-4.36-3.2-2.93 4.33-.52L8 1.12z" fill="currentColor" clip-path="url(#ho-half-{{ section.id }})"/>
+                        <path d="M8 1.12l1.85 3.95 4.33.52-3.2 2.93.83 4.36L8 10.62l-3.81 2.26.83-4.36-3.2-2.93 4.33-.52L8 1.12z" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                      </svg>
+                    </span>
+                  {%- else -%}
+                    <span class="hero-offer__star hero-offer__star--empty">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 1.12l1.85 3.95 4.33.52-3.2 2.93.83 4.36L8 10.62l-3.81 2.26.83-4.36-3.2-2.93 4.33-.52L8 1.12z" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                      </svg>
+                    </span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+              {%- if rating_count > 0 -%}
+                <span class="hero-offer__rating-count">({{ rating_count }})</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <h2 class="hero-offer__title">{{ product.title | escape }}</h2>
+
+          <div class="hero-offer__prices">
+            <span class="hero-offer__price">{{ price | money }}</span>
+            {%- if show_compare -%}
+              <span class="hero-offer__compare-price">{{ compare_at_price | money }}</span>
+            {%- endif -%}
+          </div>
+
+          <div class="hero-offer__highlights">
+            {%- if section.settings.highlight_1 != blank -%}
+              <div class="hero-offer__highlight">
+                <span class="hero-offer__highlight-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6.67 10.11L4.89 8.33l-.94.94 2.72 2.72 5.83-5.83-.94-.94-4.89 4.89z" fill="currentColor"/>
+                    <path d="M8 1.33A6.67 6.67 0 108 14.67 6.67 6.67 0 008 1.33zm0 12A5.33 5.33 0 118 2.67a5.33 5.33 0 010 10.66z" fill="currentColor"/>
+                  </svg>
+                </span>
+                <p class="hero-offer__highlight-text">{{ section.settings.highlight_1 | escape }}</p>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.highlight_2 != blank -%}
+              <div class="hero-offer__highlight">
+                <span class="hero-offer__highlight-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6.67 10.11L4.89 8.33l-.94.94 2.72 2.72 5.83-5.83-.94-.94-4.89 4.89z" fill="currentColor"/>
+                    <path d="M8 1.33A6.67 6.67 0 108 14.67 6.67 6.67 0 008 1.33zm0 12A5.33 5.33 0 118 2.67a5.33 5.33 0 010 10.66z" fill="currentColor"/>
+                  </svg>
+                </span>
+                <p class="hero-offer__highlight-text">{{ section.settings.highlight_2 | escape }}</p>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.highlight_3 != blank -%}
+              <div class="hero-offer__highlight">
+                <span class="hero-offer__highlight-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6.67 10.11L4.89 8.33l-.94.94 2.72 2.72 5.83-5.83-.94-.94-4.89 4.89z" fill="currentColor"/>
+                    <path d="M8 1.33A6.67 6.67 0 108 14.67 6.67 6.67 0 008 1.33zm0 12A5.33 5.33 0 118 2.67a5.33 5.33 0 010 10.66z" fill="currentColor"/>
+                  </svg>
+                </span>
+                <p class="hero-offer__highlight-text">{{ section.settings.highlight_3 | escape }}</p>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <hr class="hero-offer__divider">
+
+          <div class="hero-offer__children">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'child-product' -%}
+                {%- assign child_product = block.settings.product -%}
+                {%- assign child_name = block.settings.name -%}
+                {%- if child_name == blank and child_product != blank -%}
+                  {%- assign child_name = child_product.title -%}
+                {%- endif -%}
+                <div class="hero-offer__child" {{ block.shopify_attributes }}>
+                  <div class="hero-offer__child-thumb">
+                    {%- if child_product != blank and child_product.featured_image != blank -%}
+                      {{ child_product.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', class: 'hero-offer__child-img', alt: child_product.title }}
+                    {%- endif -%}
+                  </div>
+                  <div class="hero-offer__child-info">
+                    <div class="hero-offer__child-header">
+                      {%- if child_name != blank -%}
+                        <p class="hero-offer__child-name">
+                          {%- if block.settings.is_free -%}
+                            <span class="hero-offer__child-free">FREE</span>
+                          {%- endif -%}
+                          {{- child_name | escape -}}
+                        </p>
+                      {%- endif -%}
+                      {%- if block.settings.tag_1 != blank or block.settings.tag_2 != blank -%}
+                        <div class="hero-offer__child-tags">
+                          {%- if block.settings.tag_1 != blank -%}
+                            <span class="hero-offer__child-tag">{{ block.settings.tag_1 | escape }}</span>
+                          {%- endif -%}
+                          {%- if block.settings.tag_2 != blank -%}
+                            <span class="hero-offer__child-tag">{{ block.settings.tag_2 | escape }}</span>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.description != blank -%}
+                      <p class="hero-offer__child-desc">{{ block.settings.description | escape }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          <hr class="hero-offer__divider">
+
+          <div class="hero-offer__benefits">
+            {%- if section.settings.benefit_1 != blank -%}
+              <div class="hero-offer__benefit">
+                <svg class="hero-offer__benefit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="hero-offer__benefit-text">{{ section.settings.benefit_1 | escape }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.benefit_2 != blank -%}
+              <div class="hero-offer__benefit">
+                <svg class="hero-offer__benefit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="hero-offer__benefit-text">{{ section.settings.benefit_2 | escape }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.benefit_3 != blank -%}
+              <div class="hero-offer__benefit">
+                <svg class="hero-offer__benefit-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="hero-offer__benefit-text">{{ section.settings.benefit_3 | escape }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- assign atc_aria = 'Add ' | append: product.title | append: ' to cart' -%}
+          <button
+            class="hero-offer__add-btn"
+            type="button"
+            data-variant-id="{{ first_variant_id }}"
+            {% if selling_plan_id != blank %}data-selling-plan="{{ selling_plan_id }}"{% endif %}
+            aria-label="{{ atc_aria | escape }}"
+          >
+            <span class="hero-offer__add-btn-label">ADD TO CART</span>
+            <div class="hero-offer__add-btn-prices">
+              {%- if show_compare -%}
+                <span class="hero-offer__add-btn-compare">{{ compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="hero-offer__add-btn-price">{{ price | money }}</span>
+            </div>
+          </button>
+
+          <div class="hero-offer__additional">
+            {%- if section.settings.additional_1_text != blank -%}
+              <div class="hero-offer__additional-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <g clip-path="url(#ho-truck-{{ section.id }})">
+                    <path d="M12 6.75H13.5L15.75 9V12.75H14.25" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2.25 12.75H3.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5.25 14.25A1.5 1.5 0 105.25 11.25 1.5 1.5 0 005.25 14.25z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12.75 14.25A1.5 1.5 0 1012.75 11.25 1.5 1.5 0 0012.75 14.25z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.75 12.75H11.25" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 6.75V12.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M1.5 6.75H12V12.75H1.5V6.75Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <defs>
+                    <clipPath id="ho-truck-{{ section.id }}">
+                      <rect width="18" height="18" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span class="hero-offer__additional-text">{{ section.settings.additional_1_text | escape }}</span>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.additional_2_text != blank -%}
+              <div class="hero-offer__additional-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <g clip-path="url(#ho-shield-{{ section.id }})">
+                    <path d="M9 16.5S15 13.5 15 9V3.75L9 1.5 3 3.75V9C3 13.5 9 16.5 9 16.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.75 9L8.25 10.5 11.25 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <defs>
+                    <clipPath id="ho-shield-{{ section.id }}">
+                      <rect width="18" height="18" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span class="hero-offer__additional-text">{{ section.settings.additional_2_text | escape }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="hero-offer__empty">
+        <p>Select a product in the theme editor to display the hero offer.</p>
+      </div>
+    {%- endif -%}
+  </section>
+</hero-offer-section>
+
+{% stylesheet %}
+  /* ── Hero Offer section ── */
+
+  /* Base (mobile-first) */
+  .hero-offer {
+    position: relative;
+    padding-block: calc(var(--ho-padding-top) / 2) calc(var(--ho-padding-bottom) / 2);
+    background-color: #ffffff;
+    overflow-x: clip;
+  }
+
+  .hero-offer__container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ho-bg);
+    color: var(--ho-accent);
+  }
+
+  /* ── Gallery ── */
+  .hero-offer__gallery {
+    width: 100%;
+    flex-shrink: 0;
+    background-color: var(--ho-bg);
+  }
+
+  .hero-offer__gallery-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-offer__gallery-main {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-offer__gallery-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hero-offer__gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-offer__slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    aspect-ratio: 1 / 1;
+    background-color: var(--ho-bg);
+  }
+
+  .hero-offer__slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .hero-offer__labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hero-offer__label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 14px;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #FFFEF5;
+    white-space: nowrap;
+  }
+
+  /* Thumbnails — hidden on mobile */
+  .hero-offer__thumbnails {
+    display: none;
+  }
+
+  /* ── Details panel ── */
+  .hero-offer__details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 16px 24px;
+    color: var(--ho-accent);
+    background-color: var(--ho-bg);
+  }
+
+  /* Star rating */
+  .hero-offer__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-offer__stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: rgb(245, 130, 50);
+  }
+
+  .hero-offer__star {
+    display: flex;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .hero-offer__star svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hero-offer__rating-count {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--ho-accent);
+    margin-inline-start: 2px;
+  }
+
+  /* Title */
+  .hero-offer__title {
+    font-family: "poppins bold", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    color: var(--ho-heading);
+    text-transform: capitalize;
+    margin: 0;
+  }
+
+  /* Prices */
+  .hero-offer__prices {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-offer__price {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    color: var(--ho-accent);
+  }
+
+  .hero-offer__compare-price {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 18px;
+    line-height: 24px;
+    color: rgb(75, 65, 58);
+    text-decoration: line-through;
+  }
+
+  /* Highlights */
+  .hero-offer__highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hero-offer__highlight {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hero-offer__highlight-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--ho-accent);
+    margin-top: 1px;
+  }
+
+  .hero-offer__highlight-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hero-offer__highlight-text {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    color: var(--ho-text);
+    margin: 0;
+  }
+
+  /* Divider */
+  .hero-offer__divider {
+    width: 100%;
+    height: 0;
+    border: none;
+    border-top: 1px solid var(--ho-divider);
+    margin: 0;
+  }
+
+  /* Child products */
+  .hero-offer__children {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero-offer__child {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .hero-offer__child-thumb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    background-color: var(--ho-accent-light);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .hero-offer__child-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .hero-offer__child-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 0%;
+  }
+
+  .hero-offer__child-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hero-offer__child-name {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--ho-accent);
+    margin: 0;
+    flex: 1 1 0%;
+  }
+
+  .hero-offer__child-free {
+    color: var(--ho-free);
+    font-weight: 700;
+    margin-inline-end: 4px;
+  }
+
+  .hero-offer__child-tags {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .hero-offer__child-tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 6px;
+    background-color: var(--ho-accent-light);
+    border-radius: 12px;
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: var(--ho-text);
+    white-space: nowrap;
+  }
+
+  .hero-offer__child-desc {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--ho-text);
+    margin: 0;
+  }
+
+  /* Benefits */
+  .hero-offer__benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px 16px;
+    padding: 2px 0;
+  }
+
+  .hero-offer__benefit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-offer__benefit-icon {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    color: var(--ho-accent);
+  }
+
+  .hero-offer__benefit-text {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ho-text);
+  }
+
+  /* Add to cart button */
+  .hero-offer__add-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    height: 48px;
+    max-width: 100%;
+    width: 100%;
+    background-color: var(--ho-cta-bg);
+    color: var(--ho-cta-text);
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    align-self: center;
+  }
+
+  .hero-offer__add-btn:hover {
+    opacity: 0.9;
+  }
+
+  .hero-offer__add-btn:focus-visible {
+    outline: 2px solid var(--ho-accent);
+    outline-offset: 2px;
+  }
+
+  .hero-offer__add-btn--loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .hero-offer__add-btn-label {
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    color: inherit;
+  }
+
+  .hero-offer__add-btn-prices {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-offer__add-btn-compare {
+    font-family: "poppins bold", sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    text-decoration: line-through;
+    color: inherit;
+  }
+
+  .hero-offer__add-btn-price {
+    font-family: "poppins bold", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 14px;
+    color: inherit;
+  }
+
+  /* Additional info */
+  .hero-offer__additional {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hero-offer__additional-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ho-accent);
+  }
+
+  .hero-offer__additional-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .hero-offer__additional-text {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ho-text);
+  }
+
+  /* Empty state */
+  .hero-offer__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 64px 16px;
+    text-align: center;
+  }
+
+  .hero-offer__empty p {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    color: var(--ho-accent);
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .hero-offer {
+      padding-inline: 64px;
+      padding-block: var(--ho-padding-top) var(--ho-padding-bottom);
+    }
+
+    .hero-offer__container {
+      flex-direction: row;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .hero-offer__gallery {
+      width: 50%;
+    }
+
+    .hero-offer__gallery-wrapper {
+      gap: 24px;
+      padding: 16px 16px 24px;
+      height: 100%;
+    }
+
+    .hero-offer__gallery-main {
+      flex: 1 1 0%;
+    }
+
+    .hero-offer__slide {
+      padding: 40px;
+    }
+
+    .hero-offer__thumbnails {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .hero-offer__thumbnails::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-offer__thumbnail {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      padding: 12px;
+      background-color: #ffffff;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      overflow: hidden;
+      appearance: none;
+      box-sizing: border-box;
+    }
+
+    .hero-offer__thumbnail:focus-visible {
+      outline: 1px auto rgb(0, 95, 204);
+    }
+
+    .hero-offer__thumbnail--active {
+      border-color: var(--ho-accent);
+    }
+
+    .hero-offer__thumbnail-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero-offer__details {
+      width: 50%;
+      flex-shrink: 0;
+      padding: 35px 64px;
+    }
+
+    .hero-offer__title {
+      font-size: 32px;
+      line-height: 40px;
+    }
+
+    .hero-offer__add-btn {
+      max-width: 480px;
+      padding: 0 32px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-offer__gallery-track {
+      scroll-behavior: auto;
+    }
+
+    .hero-offer__add-btn {
+      transition: none;
+    }
+
+    .hero-offer__thumbnail {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    class HeroOfferSection extends HTMLElement {
+      connectedCallback() {
+        this.gallery = this.querySelector('.hero-offer__gallery-track');
+        this.slides = this.querySelectorAll('.hero-offer__slide');
+        this.thumbnails = this.querySelectorAll('.hero-offer__thumbnail');
+        this.addBtn = this.querySelector('.hero-offer__add-btn');
+
+        if (this.thumbnails.length > 0) {
+          this.setupThumbnails();
+          this.setupObserver();
+        }
+
+        if (this.addBtn) {
+          this.setupAddToCart();
+        }
+      }
+
+      setupThumbnails() {
+        for (const thumb of this.thumbnails) {
+          thumb.addEventListener('click', () => {
+            var index = parseInt(thumb.dataset.index, 10);
+            var slide = this.slides[index];
+            if (slide && this.gallery) {
+              slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+            }
+          });
+        }
+      }
+
+      setupObserver() {
+        if (!this.gallery || this.slides.length === 0) return;
+
+        var self = this;
+        var observer = new IntersectionObserver(
+          function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].isIntersecting) {
+                var idx = parseInt(entries[i].target.dataset.index, 10);
+                self.setActiveThumb(idx);
+              }
+            }
+          },
+          { root: this.gallery, threshold: 0.5 }
+        );
+
+        for (var j = 0; j < this.slides.length; j++) {
+          observer.observe(this.slides[j]);
+        }
+      }
+
+      setActiveThumb(index) {
+        for (var i = 0; i < this.thumbnails.length; i++) {
+          var thumb = this.thumbnails[i];
+          var isActive = parseInt(thumb.dataset.index, 10) === index;
+          thumb.classList.toggle('hero-offer__thumbnail--active', isActive);
+          thumb.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        }
+      }
+
+      setupAddToCart() {
+        var self = this;
+        this.addBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var variantId = self.addBtn.dataset.variantId;
+          if (!variantId) return;
+
+          self.addBtn.disabled = true;
+          self.addBtn.classList.add('hero-offer__add-btn--loading');
+
+          var url = (window.Theme && window.Theme.routes && window.Theme.routes.cart_add_url) || '/cart/add.js';
+          var body = {
+            items: [
+              {
+                id: parseInt(variantId, 10),
+                quantity: 1
+              }
+            ]
+          };
+
+          var sellingPlan = self.addBtn.dataset.sellingPlan;
+          if (sellingPlan) {
+            body.items[0].selling_plan = parseInt(sellingPlan, 10);
+          }
+
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(body)
+          })
+            .then(function (res) {
+              if (!res.ok) throw new Error('Add to cart failed');
+              document.dispatchEvent(new CustomEvent('cart:refresh'));
+              document.dispatchEvent(new CustomEvent('cart:change'));
+            })
+            .catch(function (err) {
+              console.error('Hero offer ATC error:', err);
+            })
+            .finally(function () {
+              self.addBtn.disabled = false;
+              self.addBtn.classList.remove('hero-offer__add-btn--loading');
+            });
+        });
+      }
+    }
+
+    if (!customElements.get('hero-offer-section')) {
+      customElements.define('hero-offer-section', HeroOfferSection);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero offer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Highlights"
+    },
+    {
+      "type": "text",
+      "id": "highlight_1",
+      "label": "Highlight 1",
+      "default": "Daily multivitamin, immune, and gut support in one simple routine"
+    },
+    {
+      "type": "text",
+      "id": "highlight_2",
+      "label": "Highlight 2",
+      "default": "Made from real fruit and no sugar cane"
+    },
+    {
+      "type": "text",
+      "id": "highlight_3",
+      "label": "Highlight 3",
+      "default": "A taste kids actually enjoy - even picky eaters"
+    },
+    {
+      "type": "header",
+      "content": "Benefits"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "Benefit 1",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "Benefit 2",
+      "default": "Lifetime discount"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "Benefit 3",
+      "default": "Easily skip or cancel anytime"
+    },
+    {
+      "type": "header",
+      "content": "Additional info"
+    },
+    {
+      "type": "text",
+      "id": "additional_1_text",
+      "label": "Additional item 1",
+      "default": "Delivered every month"
+    },
+    {
+      "type": "text",
+      "id": "additional_2_text",
+      "label": "Additional item 2",
+      "default": "100 Day Money Back Guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F2DDE8"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg",
+      "label": "CTA background",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "free_color",
+      "label": "FREE label",
+      "default": "#D7272E"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "label",
+      "name": "Label",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Label"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background",
+          "default": "#D9384A"
+        }
+      ]
+    },
+    {
+      "type": "child-product",
+      "name": "Child product",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name override",
+          "info": "Overrides the product title"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_free",
+          "label": "Show FREE badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "tag_1",
+          "label": "Tag 1"
+        },
+        {
+          "type": "text",
+          "id": "tag_2",
+          "label": "Tag 2"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero offer",
+      "settings": {
+        "highlight_1": "Daily multivitamin, immune, and gut support in one simple routine",
+        "highlight_2": "Made from real fruit and no sugar cane",
+        "highlight_3": "A taste kids actually enjoy - even picky eaters",
+        "benefit_1": "Free Shipping",
+        "benefit_2": "Lifetime discount",
+        "benefit_3": "Easily skip or cancel anytime",
+        "additional_1_text": "Delivered every month",
+        "additional_2_text": "100 Day Money Back Guarantee",
+        "background_color": "#F2DDE8",
+        "accent_color": "#680040",
+        "heading_color": "#680040",
+        "text_color": "#000000",
+        "cta_bg": "#680040",
+        "cta_text": "#FFFFFF",
+        "free_color": "#D7272E",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": [
+        {
+          "type": "label",
+          "settings": {
+            "text": "BUY 2, GET 1 FREE FOR LIFE",
+            "background_color": "#D9384A"
+          }
+        },
+        {
+          "type": "label",
+          "settings": {
+            "text": "PARENT'S CHOICE",
+            "background_color": "#663AB5"
+          }
+        },
+        {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Multivitamin - Strawberry",
+            "is_free": false,
+            "tag_1": "Strawberry",
+            "tag_2": "90ct",
+            "description": "Daily Whole Food Nutrition"
+          }
+        },
+        {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Pre & Probiotic - Mixed Berry",
+            "is_free": false,
+            "tag_1": "Mixed Berry",
+            "tag_2": "60ct",
+            "description": "3-in-1 Digestive Support"
+          }
+        },
+        {
+          "type": "child-product",
+          "settings": {
+            "name": "Kids Elderberry Immunity",
+            "is_free": true,
+            "tag_1": "Elderberry",
+            "tag_2": "60ct",
+            "description": "Daily 3-in-1 Immune Defense"
+          }
+        },
+        {
+          "type": "child-product",
+          "settings": {
+            "name": "Llama Stickers",
+            "is_free": true
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
