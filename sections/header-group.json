@@ -5,13 +5,26 @@
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
-        "announcement_BxgCk9": {
+        "announcement_slide_1": {
           "type": "_announcement",
           "settings": {
-            "text": "Welcome to our store",
+            "text": "100-Day Money Back Guarantee",
             "link": "",
-            "font": "var(--font-subheading--family)",
-            "font_size": "0.75rem",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_slide_2": {
+          "type": "_announcement",
+          "settings": {
+            "text": "<strong>Buy 2 Get 1 FREE FOR LIFE</strong> when you subscribe | Savings Auto-Applied ✅",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
             "weight": "",
             "letter_spacing": "normal",
             "case": "none"
@@ -20,16 +33,17 @@
         }
       },
       "block_order": [
-        "announcement_BxgCk9"
+        "announcement_slide_1",
+        "announcement_slide_2"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
         "speed": 5,
-        "section_width": "page-width",
-        "color_scheme": "scheme-1",
-        "divider_width": 1,
-        "padding-block-start": 15,
-        "padding-block-end": 15
+        "section_width": "full-width",
+        "color_scheme": "scheme-10",
+        "divider_width": 0,
+        "padding-block-start": 8,
+        "padding-block-end": 8
       }
     },
     "header_section": {
