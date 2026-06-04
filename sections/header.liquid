@@ -1122,8 +1122,8 @@
    * ================================ */
 
   /* Hide underlay system — pill provides its own background */
-  .header__underlay-closed,
-  .header__underlay-open {
+  #header-component .header__underlay-closed,
+  #header-component .header__underlay-open {
     display: none;
   }
 
@@ -1177,12 +1177,11 @@
   }
 
   /* On transparent mode, force dark text inside the pill (pill is always white bg) */
-  .header[transparent] #header-component .header__columns,
-  .header[transparent] .header__columns {
+  #header-component[transparent] .header__columns {
     color: rgb(104, 0, 64);
   }
 
-  .header[transparent] .header__row {
+  #header-component[transparent] .header__row {
     --color-foreground: rgb(104, 0, 64);
   }
 
