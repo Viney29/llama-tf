@@ -675,6 +675,26 @@
         "logo_3",
         "logo_4"
       ]
+    },
+    "founder_story": {
+      "type": "founder-story",
+      "settings": {
+        "heading": "Built by dads. Backed by science.",
+        "body_text_desktop": "Frustrated by sugary, artificial vitamins, dads Kevin & Brad created a truly healthy option for their kids and yours.",
+        "body_text_mobile": "Kevin and Brad are two dads who couldn't find a clean vitamin for their kids. Everything was packed with added sugar cane, synthetic vitamins, and ingredients disguised as \"healthy.\" So they tested 75+ batches and created a real-fruit gummy that was closer to food than candy.",
+        "button_text": "Read our story",
+        "button_link": "/pages/about-us",
+        "image_desktop": "shopify://shop_images/dekstop-founder-ca23dbe2ec9a.png",
+        "image_mobile": "shopify://shop_images/mobile-founder-b011790fddae.png",
+        "heading_color": "#680040",
+        "body_text_color": "#000000",
+        "body_text_color_mobile": "#4B413A",
+        "background_color": "#9ED7EF",
+        "button_background_color": "#680040",
+        "button_text_color": "#FFFFFF",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
     }
   },
   "order": [
@@ -687,6 +707,7 @@
     "product_list_fa6P9H",
     "difference_table",
     "multi_column",
-    "press_mentions"
+    "press_mentions",
+    "founder_story"
   ]
 }
