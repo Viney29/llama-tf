@@ -1,0 +1,376 @@
+<section
+  id="Section-{{ section.id }}"
+  class="custom-faq section section--full-width"
+  style="
+    --cf-padding-top: {{ section.settings.padding-block-start }}px;
+    --cf-padding-bottom: {{ section.settings.padding-block-end }}px;
+    --cf-bg: {{ section.settings.background_color }};
+    --cf-heading-color: {{ section.settings.heading_color }};
+    --cf-text-color: {{ section.settings.text_color }};
+  "
+>
+  <div class="custom-faq__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="custom-faq__heading ff-heading ff-secondary">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="custom-faq__list">
+        {%- for block in section.blocks -%}
+          <div class="custom-faq__item" {{ block.shopify_attributes }}>
+            <button
+              type="button"
+              class="custom-faq__trigger ff-body"
+              aria-expanded="false"
+              aria-controls="CustomFaqAnswer-{{ section.id }}-{{ block.id }}"
+            >
+              <span class="custom-faq__question">{{ block.settings.question | escape }}</span>
+              <span class="custom-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div
+              id="CustomFaqAnswer-{{ section.id }}-{{ block.id }}"
+              class="custom-faq__answer rte ff-body"
+              role="region"
+            >
+              <div class="custom-faq__answer-inner">
+                {{ block.settings.answer }}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('Section-{{ section.id }}');
+    if (!section) return;
+
+    var triggers = section.querySelectorAll('.custom-faq__trigger');
+
+    for (var i = 0; i < triggers.length; i++) {
+      triggers[i].addEventListener('click', function () {
+        var item = this.closest('.custom-faq__item');
+        var isOpen = item.classList.contains('is-open');
+        var answer = item.querySelector('.custom-faq__answer');
+        var answerInner = item.querySelector('.custom-faq__answer-inner');
+
+        if (isOpen) {
+          item.classList.remove('is-open');
+          this.setAttribute('aria-expanded', 'false');
+          answer.style.maxHeight = '0px';
+        } else {
+          item.classList.add('is-open');
+          this.setAttribute('aria-expanded', 'true');
+          answer.style.maxHeight = answerInner.scrollHeight + 'px';
+        }
+      });
+    }
+  })();
+</script>
+
+{% stylesheet %}
+  /* ── Custom FAQ section ── */
+  .custom-faq {
+    position: relative;
+    padding-block: calc(var(--cf-padding-top) / 2) calc(var(--cf-padding-bottom) / 2);
+    background-color: var(--cf-bg);
+    color: var(--cf-heading-color);
+    z-index: 0;
+  }
+
+  .custom-faq__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-inline: 16px;
+    color: var(--cf-heading-color);
+  }
+
+  /* ── Heading ── */
+  .custom-faq__heading {
+    font-family: "poppins bold", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    text-align: center;
+    color: var(--cf-heading-color);
+    margin: 0;
+  }
+
+  /* ── FAQ List ── */
+  .custom-faq__list {
+    color: var(--cf-heading-color);
+  }
+
+  /* ── FAQ Item ── */
+  .custom-faq__item {
+    border-bottom: 1px solid rgba(0, 62, 107, 0.2);
+  }
+
+  /* ── Trigger button ── */
+  .custom-faq__trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--cf-text-color);
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 18px;
+    line-height: 26.1px;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .custom-faq__trigger:focus-visible {
+    outline: 1px auto rgb(0, 95, 204);
+  }
+
+  /* ── Question text ── */
+  .custom-faq__question {
+    flex: 1 1 0%;
+    color: var(--cf-text-color);
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 18px;
+    line-height: 26.1px;
+    text-align: left;
+  }
+
+  /* ── Plus / Minus icon ── */
+  .custom-faq__icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .custom-faq__icon::before,
+  .custom-faq__icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: var(--cf-text-color);
+    transition: transform 0.3s ease;
+  }
+
+  /* Horizontal bar */
+  .custom-faq__icon::before {
+    width: 14px;
+    height: 1.6px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Vertical bar — rotates to 0 when open */
+  .custom-faq__icon::after {
+    width: 1.6px;
+    height: 14px;
+    transform: translate(-50%, -50%);
+  }
+
+  .custom-faq__item.is-open .custom-faq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  /* ── Answer panel ── */
+  .custom-faq__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .custom-faq__answer-inner {
+    padding-bottom: 20px;
+    max-width: 900px;
+    color: var(--cf-text-color);
+  }
+
+  .custom-faq__answer-inner p {
+    font-family: "ff good pro narrow", sans-serif;
+    font-size: 16px;
+    line-height: 23.2px;
+    color: var(--cf-text-color);
+    margin: 0;
+  }
+
+  /* ── Desktop (min-width: 750px) ── */
+  @media screen and (min-width: 750px) {
+    .custom-faq {
+      padding-block: var(--cf-padding-top) var(--cf-padding-bottom);
+    }
+
+    .custom-faq__inner {
+      gap: 32px;
+      padding-inline: 256px;
+    }
+
+    .custom-faq__heading {
+      font-size: 40px;
+      line-height: 48px;
+    }
+
+    .custom-faq__trigger {
+      font-size: 20px;
+      line-height: 29px;
+    }
+
+    .custom-faq__question {
+      font-size: 20px;
+      line-height: 29px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom FAQ",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Still Wondering?"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#680040"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question text here"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer text here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom FAQ",
+      "settings": {
+        "heading": "Still Wondering?",
+        "heading_color": "#680040",
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it worth the price?",
+            "answer": "<p>Llama Naturals costs more because it's made differently. Most kids' vitamins start as candy. Ours start with whole organic fruits, without synthetic shortcuts, added cane sugar, or artificial ingredients. ent here.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will my kid actually take it?",
+            "answer": "<p>That's the most important question. Vitamins only help if kids will actually eat them. Llama gummies are made with real fruit, so the taste is closer to fruit than candy. Many parents say vitamin time gets easier fast. And 72.7% say their kids love the taste on the first try.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "I've tried similar vitamins and they didn't work. What makes this different?",
+            "answer": "<p>Most gummy vitamins use synthetic nutrients and added sugars. Llama Naturals uses whole-food vitamins derived from real organic fruits and vegetables, which are easier for the body to absorb and use.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it safe?",
+            "answer": "<p>Absolutely. Llama Naturals are USDA Organic, non-GMO, allergen-free, and third-party tested. They contain no artificial colors, flavors, sweeteners, or preservatives.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if my kid doesn't like it?",
+            "answer": "<p>We offer a 100-Day Money-Back Guarantee. If your child doesn't like them, contact us and we'll make it right — no returns needed, no hassle.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long until I see results?",
+            "answer": "<p>Results vary, but many parents notice improvements in energy and overall wellness within the first few weeks of consistent use. For best results, make it a daily habit.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

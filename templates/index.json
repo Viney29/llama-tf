@@ -695,6 +695,69 @@
         "padding-block-start": 72,
         "padding-block-end": 72
       }
+    },
+    "custom_faq": {
+      "type": "custom-faq",
+      "settings": {
+        "heading": "Still Wondering?",
+        "heading_color": "#680040",
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "item_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it worth the price?",
+            "answer": "<p>Llama Naturals costs more because it's made differently. Most kids' vitamins start as candy. Ours start with whole organic fruits, without synthetic shortcuts, added cane sugar, or artificial ingredients. ent here.</p>"
+          }
+        },
+        "item_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will my kid actually take it?",
+            "answer": "<p>That's the most important question. Vitamins only help if kids will actually eat them. Llama gummies are made with real fruit, so the taste is closer to fruit than candy. Many parents say vitamin time gets easier fast. And 72.7% say their kids love the taste on the first try.</p>"
+          }
+        },
+        "item_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "I've tried similar vitamins and they didn't work. What makes this different?",
+            "answer": "<p>Most gummy vitamins use synthetic nutrients and added sugars. Llama Naturals uses whole-food vitamins derived from real organic fruits and vegetables, which are easier for the body to absorb and use.</p>"
+          }
+        },
+        "item_4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it safe?",
+            "answer": "<p>Absolutely. Llama Naturals are USDA Organic, non-GMO, allergen-free, and third-party tested. They contain no artificial colors, flavors, sweeteners, or preservatives.</p>"
+          }
+        },
+        "item_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if my kid doesn't like it?",
+            "answer": "<p>We offer a 100-Day Money-Back Guarantee. If your child doesn't like them, contact us and we'll make it right — no returns needed, no hassle.</p>"
+          }
+        },
+        "item_6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long until I see results?",
+            "answer": "<p>Results vary, but many parents notice improvements in energy and overall wellness within the first few weeks of consistent use. For best results, make it a daily habit.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6"
+      ]
     }
   },
   "order": [
@@ -708,6 +771,7 @@
     "difference_table",
     "multi_column",
     "press_mentions",
-    "founder_story"
+    "founder_story",
+    "custom_faq"
   ]
 }
