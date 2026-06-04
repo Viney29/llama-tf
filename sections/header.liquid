@@ -1111,6 +1111,82 @@
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
   }
+
+  /* ================================
+   * Pill-shaped floating header overrides
+   * Matches Llama Naturals live site design:
+   * - White pill bar with border-radius:500px
+   * - Box shadow, max-width:1344px, centered
+   * - Transparent section root (no full-width bg bar)
+   * - Hidden underlays (pill provides its own bg)
+   * ================================ */
+
+  /* Hide underlay system — pill provides its own background */
+  .header__underlay-closed,
+  .header__underlay-open {
+    display: none;
+  }
+
+  /* Row overrides — outer padding around the pill */
+  #header-component .header__row--top {
+    padding-inline: 48px;
+    padding-block: 16px;
+    border-bottom: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    #header-component .header__row--top {
+      padding-inline: 10px;
+      padding-block: 4px;
+    }
+  }
+
+  /* Pill shape on the columns container */
+  #header-component .header__columns {
+    background: rgb(255, 255, 255);
+    border-radius: 500px;
+    box-shadow: rgba(106, 99, 84, 0.1) 0px 1px 6px 1px;
+    max-width: 1344px;
+    min-height: 56px;
+    margin-inline: auto;
+    padding: 8px 32px 10px 32px;
+    align-items: center;
+    border-bottom: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    #header-component .header__columns {
+      padding: 7px 24px;
+    }
+  }
+
+  /* Remove any border-bottom on rows and columns set by divider settings */
+  #header-component .header__row--top:not(.divider--page-width),
+  #header-component .header__row--top.divider--page-width .header__columns {
+    border-bottom: none;
+  }
+
+  /* Nav link weight — match captured 700 */
+  #header-component .menu-list__link-title {
+    font-weight: 700;
+  }
+
+  /* Icon area gap — match captured 24px between search, account, cart icons */
+  #header-component header-actions {
+    gap: 24px;
+  }
+
+  /* On transparent mode, force dark text inside the pill (pill is always white bg) */
+  .header[transparent] #header-component .header__columns,
+  .header[transparent] .header__columns {
+    color: rgb(104, 0, 64);
+  }
+
+  .header[transparent] .header__row {
+    --color-foreground: rgb(104, 0, 64);
+  }
+
+  /* End Pill-shaped header overrides ================ */
 {% endstylesheet %}
 
 {% unless request.design_mode %}
