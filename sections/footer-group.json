@@ -14,209 +14,159 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "group_wErUQf": {
-          "type": "group",
-          "name": "Join our email list",
+        "menu-shop": {
+          "type": "menu",
           "settings": {
-            "link": "",
-            "open_in_new_tab": false,
+            "menu": "footer-shop",
+            "heading": "",
+            "menu_spacing": 12,
+            "show_as_accordion": true,
+            "accordion_icon": "caret",
+            "accordion_dividers": true,
+            "inherit_color_scheme": true,
+            "heading_preset": "paragraph",
+            "link_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
+        "menu-about": {
+          "type": "menu",
+          "settings": {
+            "menu": "footer-about",
+            "heading": "",
+            "menu_spacing": 12,
+            "show_as_accordion": true,
+            "accordion_icon": "caret",
+            "accordion_dividers": true,
+            "inherit_color_scheme": true,
+            "heading_preset": "paragraph",
+            "link_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
+        "menu-support": {
+          "type": "menu",
+          "settings": {
+            "menu": "footer-support",
+            "heading": "",
+            "menu_spacing": 12,
+            "show_as_accordion": true,
+            "accordion_icon": "caret",
+            "accordion_dividers": true,
+            "inherit_color_scheme": true,
+            "heading_preset": "paragraph",
+            "link_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
+        "newsletter-group": {
+          "type": "group",
+          "settings": {
             "content_direction": "column",
             "vertical_on_mobile": true,
             "horizontal_alignment": "flex-start",
             "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
             "gap": 12,
             "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
             "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "placeholder": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
           "blocks": {
-            "text_pF6rVi": {
+            "newsletter-heading": {
               "type": "text",
-              "name": "Heading",
               "settings": {
                 "text": "<h2>Join our email list</h2>",
                 "width": "100%",
-                "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "h3",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
+                "type_preset": "h3"
+              }
             },
-            "text_HafH7P": {
+            "newsletter-description": {
               "type": "text",
-              "name": "Text",
               "settings": {
                 "text": "<p>Get exclusive deals and early access to new products.</p>",
                 "width": "100%",
-                "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
+                "type_preset": "rte"
+              }
             },
-            "email-signup_HafH7P": {
+            "newsletter-email-signup": {
               "type": "email-signup",
-              "name": "Email Signup",
               "settings": {
-                "width": "fill"
+                "width": "fill",
+                "display_type": "text",
+                "label": "Submit",
+                "style_class": "button",
+                "border_radius": 24,
+                "border_width": 1
+              }
+            },
+            "newsletter-social-links": {
+              "type": "social-links",
+              "settings": {
+                "instagram_url": "https://www.instagram.com/llamanaturals",
+                "tiktok_url": "https://www.tiktok.com/@llamanaturals",
+                "facebook_url": "https://www.facebook.com/LlamaNaturals",
+                "linkedin_url": "https://www.linkedin.com/company/llamanaturals",
+                "custom_url": "https://www.amazon.com/stores/LlamaNaturals"
               }
             }
           },
           "block_order": [
-            "text_pF6rVi",
-            "text_HafH7P",
-            "email-signup_HafH7P"
+            "newsletter-heading",
+            "newsletter-description",
+            "newsletter-email-signup",
+            "newsletter-social-links"
           ]
-        },
-        "menu_footer": {
-          "type": "menu",
-          "settings": {
-            "menu": "footer",
-            "heading": "",
-            "menu_spacing": 12,
-            "show_as_accordion": false,
-            "accordion_icon": "plus",
-            "accordion_dividers": false,
-            "inherit_color_scheme": true,
-            "heading_preset": "paragraph",
-            "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
-        },
-        "menu_main": {
-          "type": "menu",
-          "settings": {
-            "menu": "main-menu",
-            "heading": "",
-            "menu_spacing": 12,
-            "show_as_accordion": false,
-            "accordion_icon": "plus",
-            "accordion_dividers": false,
-            "inherit_color_scheme": true,
-            "heading_preset": "paragraph",
-            "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
         }
       },
       "block_order": [
-        "group_wErUQf",
-        "menu_footer",
-        "menu_main"
+        "menu-shop",
+        "menu-about",
+        "menu-support",
+        "newsletter-group"
       ],
-      "name": "t:names.footer",
       "settings": {
         "section_width": "page-width",
         "gap": 40,
-        "color_scheme": "scheme-5",
-        "padding-block-start": 36,
-        "padding-block-end": 36
+        "color_scheme": "scheme-9",
+        "padding-block-start": 64,
+        "padding-block-end": 40
       }
     },
-    "utilities": {
-      "type": "footer-utilities",
+    "bottom": {
+      "type": "footer-bottom",
       "settings": {
-        "section_width": "page-width",
-        "gap": 24,
-        "divider_thickness": 1,
-        "color_scheme": "scheme-5",
-        "padding-block-start": 12,
-        "padding-block-end": 16
-      },
-      "blocks": {
-        "copyright": {
-          "type": "footer-copyright",
-          "settings": {
-            "show_powered_by": true,
-            "font_size": "0.75rem",
-            "case": "none"
-          }
-        },
-        "policy_list": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          }
-        },
-        "social_icons": {
-          "type": "social-links",
-          "settings": {
-            "facebook_url": "https://www.facebook.com",
-            "instagram_url": "https://www.instagram.com",
-            "tiktok_url": "https://www.tiktok.com",
-            "twitter_url": "https://www.twitter.com",
-            "youtube_url": "https://www.youtube.com"
-          }
-        }
-      },
-      "block_order": [
-        "copyright",
-        "policy_list",
-        "social_icons"
-      ]
+        "color_scheme": "scheme-9",
+        "footer_image": "shopify://shop_images/figma-exported-llama-footer-image.png",
+        "cert_icon_1": "shopify://shop_images/figma-exported-cert-icon-1.png",
+        "cert_icon_2": "shopify://shop_images/figma-exported-cert-icon-2.png",
+        "cert_icon_3": "shopify://shop_images/figma-exported-cert-icon-3.png",
+        "cert_icon_4": "shopify://shop_images/figma-exported-cert-icon-4.png",
+        "cert_icon_5": "shopify://shop_images/figma-exported-cert-icon-5.png",
+        "disclaimer_text": "*DISCLAIMER: These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. Llama Naturals Pre & Probiotic is formulated to support digestive health and may help relieve occasional constipation. It is not intended for the treatment of chronic constipation or other medical conditions. Always consult your doctor, pediatrician, or healthcare provider before starting any supplement--especially if you or your child has a medical condition or is taking medication.",
+        "policy_links_menu": "footer-policies",
+        "copyright_text": "Copyright © 2026, Llama Naturals, Inc.",
+        "show_localization": true,
+        "padding-block-start": 0,
+        "padding-block-end": 40
+      }
     }
   },
   "order": [
     "footer",
-    "utilities"
+    "bottom"
   ]
 }
